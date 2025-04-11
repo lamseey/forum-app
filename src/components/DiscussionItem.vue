@@ -5,31 +5,21 @@
     <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
     <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote }}</p>
     <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote }}</p>
-    <NewResponseForm @response-added="sendToList" :discussionId="discussion.id" />
-    <ResponseList :responses="discussion.responselist" />
+    <ResponseList :discussionId="discussion.id" />
   </div>
 </template>
 
 <script setup>
 import { defineProps } from 'vue';
 import ResponseList from "@/components/ResponseList.vue";
-import NewResponseForm from "@/components/NewResponseForm.vue";
 
-let p = defineProps({
+defineProps({
   discussion: {
     type: Object,
     required: true
   }
 });
 
-console.log(p.discussion)
-
-
-const emit = defineEmits(["responseAdded"]);
-
-function sendToList(response) {
-  emit("responseAdded", response);
-}
 </script>
 
 <style scoped>

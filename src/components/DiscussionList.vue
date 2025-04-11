@@ -1,7 +1,8 @@
 <template>
   <div class="discussion-list">
+    <NewDiscussionForm @discussion-added="addDiscussion" />
     <div v-for="discussion in discussions" :key="discussion.id" class="discussion-item">
-      <DiscussionItem @response-added="fetchDiscussions" :discussion="discussion" />
+      <DiscussionItem :discussion="discussion" />
     </div>
   </div>
 </template>
@@ -11,8 +12,7 @@ import { ref, onMounted } from 'vue';
 import { collection, getDocs, addDoc} from "firebase/firestore";
 import {db} from "/src/firebase";
 import DiscussionItem from "@/components/DiscussionItem.vue";
-import NewResponseForm from "@/components/NewResponseForm.vue";
-
+import NewDiscussionForm from "@/components/NewDiscussionForm.vue";
 const discussions = ref([]);
 
 async function fetchDiscussions() {
@@ -23,14 +23,19 @@ async function fetchDiscussions() {
   }));
 }
 
+function addDiscussion(discussion) {
+  if (discussion.titre === "" || discussion.contenu === "") {
+    alert("Please fill in all fields");
+    return;
+  }
+  discussion.date = new Date();
+  addDoc(collection(db, "discussions"), discussion);
+  fetchDiscussions();
+}
+
 onMounted(() => {
   fetchDiscussions();
 })
-
-function updateDiscussions(newDiscussion) {
-  addDoc(collection(db, "discussions"), newDiscussion);
-  fetchDiscussions();
-}
 </script>
 
 <style scoped>

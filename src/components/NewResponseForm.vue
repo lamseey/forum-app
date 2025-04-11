@@ -4,8 +4,6 @@
   </button>
   <div v-if="addForm">
     <form>
-      <input v-model="response.titre" placeholder="Titre" required class="form-input">
-      <br>
       <textarea v-model="response.contenu" placeholder="Contenu" required class="form-textarea"></textarea>
       <br>
       <button @click.prevent="addResponse" class="submit-button">Submit</button>
@@ -14,8 +12,6 @@
 </template>
 <script setup>
 import { ref, defineProps } from 'vue';
-import { db } from "@/firebase";
-import {doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 let properties = defineProps({
   discussionId: {
@@ -26,12 +22,11 @@ let properties = defineProps({
 
 const emit = defineEmits(["responseAdded"]);
 
-const response = ref({
-  titre: "",
+let response = ref({
   contenu: "",
   date: null,
   upvote: 0,
-  downvote: 0
+  downvote: 0,
 });
 
 const addForm = ref(false);
@@ -41,13 +36,9 @@ function addResponse() {
     return;
   }
   response.value.date = new Date();
-  const discussionRef = doc(db, "discussions", properties.discussionId);
-  updateDoc(discussionRef, {
-    responselist: arrayUnion(response.value)
-  });
-  addForm.value = false;
+  response.value.discussionId = properties.discussionId;
   emit("responseAdded", response.value);
-  response.value = { titre: "", contenu: "", date: null, upvote: 0, downvote: 0 };
+  addForm.value = false;
 }
 
 </script>
