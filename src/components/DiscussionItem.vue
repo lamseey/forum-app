@@ -1,5 +1,6 @@
 <template>
   <div class="discussion-item">
+    <button @click="DeleteDiscussion(discussion.id)"> Delete </button>
     <h2 class="discussion-title">{{ discussion.titre }}</h2>
     <p class="discussion-content">{{ discussion.contenu }}</p>
     <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
@@ -10,7 +11,9 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { ref } from 'vue';
+import { db } from "/src/firebase";
+import { doc, deleteDoc } from "firebase/firestore";
 import ResponseList from "@/components/ResponseList.vue";
 
 defineProps({
@@ -19,6 +22,15 @@ defineProps({
     required: true
   }
 });
+
+const emit = defineEmits(["discussionDeleted"]);
+
+function DeleteDiscussion(id) {
+  if (confirm("Are you sure you want to delete this discussion?")) {
+    deleteDoc(doc(db, "discussions", id))
+    emit("discussionDeleted", id);
+  }
+}
 
 </script>
 
