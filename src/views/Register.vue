@@ -2,6 +2,8 @@
   <h1>Create a new Account</h1>
   <div class="register-container">
     <div class="register-grid">
+      <label>Username : </label>
+      <input type="text" placeholder="Username" v-model="username" />
       <label>Email : </label>
       <input type="email" placeholder="Email" v-model="email" />
       <label>Password : </label>
@@ -15,7 +17,7 @@
 <script setup>
 import useSignup from '@/composables/useSignup';
 
-const { email, password, error, register } = useSignup();
+const { email, password, username, error, register } = useSignup();
 </script>
 
 <style scoped>
