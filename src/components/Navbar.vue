@@ -1,25 +1,39 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link>
-    <router-link to="/register">Register</router-link>
-    <router-link to="/login">Login</router-link>
-    <router-link to="/profile">Profile</router-link>
-    <button class="logout" @click="logout">Logout</button>
+    <router-link to="/">Squak</router-link>
+    <div v-if="userloggedin">
+      <router-link to="/register">Register</router-link>
+      <router-link to="/login">Login</router-link>
+    </div>
+    <div v-else>
+      <router-link to="/profile">Profile</router-link>
+      <button class="logout" @click="logout">Logout</button>
+    </div>
   </nav>
 
 </template>
 
 <script setup>
 import { auth } from "@/firebase";
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import getUser from "@/composables/getUser";
+import { ref } from "vue";
+import { getAuth} from "firebase/auth";
+import router from "@/router";
 const logout = async () => {
   try {
     await signOut(auth);
     console.log("lougged out sucessfully");
+    router.push("/");
   } catch (err) {
     console.log("there was a error while logging out");
   }
 };
+
+const userloggedin = ref(getUser() == null)
+onAuthStateChanged(getAuth(), (_user) => {
+  userloggedin.value = _user == null;
+})
 </script>
 
 <style scoped>
