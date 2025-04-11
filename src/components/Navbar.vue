@@ -5,6 +5,7 @@
     <router-link to="/login">Login</router-link>
     <button @click="logout">Logout</button>
   </nav>
+
 </template>
 
 <script setup>
@@ -36,3 +37,4 @@ const logout = async () => {
     text-decoration: underline;
   }
 </style>
+>>>>>>> main
