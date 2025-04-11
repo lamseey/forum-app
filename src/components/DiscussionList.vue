@@ -30,7 +30,6 @@ onMounted(() => {
 
 function updateDiscussions(newDiscussion) {
   addDoc(collection(db, "discussions"), newDiscussion);
-  alert("Discussion added " + newDiscussion.titre);
   fetchDiscussions();
 }
 </script>
@@ -48,4 +47,6 @@ function updateDiscussions(newDiscussion) {
   background-color: #f1f1f1;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
+
+
 </style>

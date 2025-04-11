@@ -2,19 +2,16 @@
   <nav>
     <router-link to="/">Home</router-link>
     <router-link to="/register">Register</router-link>
+    <router-link to="/login">Login</router-link>
   </nav>
 </template>
 
 <style>
-  * {
-    font-family: Arial, sans-serif;
-    font-size: 105%;
-    text-align: center;
-  }
   nav {
     background-color: #333;
     color: white;
     padding: 10px;
+    text-align: center;
   }
   nav a {
     color: white;
