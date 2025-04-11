@@ -1,5 +1,5 @@
 <template>
-  <NewDiscussionForm></NewDiscussionForm>
+  <NewDiscussionForm @discussion-added="updateDiscussions"></NewDiscussionForm>
   <div v-for="discussion in discussions" :key="discussion.id">
     <DiscussionItem :discussion="discussion" />
   </div>
