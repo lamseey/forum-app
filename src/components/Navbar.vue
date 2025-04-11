@@ -20,19 +20,19 @@ const logout = async () => {
 };
 </script>
 
-<style>
-nav {
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
-nav a {
-  color: white;
-  margin-right: 10px;
-  text-decoration: none;
-}
-nav a:hover {
-  text-decoration: underline;
-}
+<style scoped>
+  nav {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  nav a {
+    color: white;
+    margin-right: 10px;
+    text-decoration: none;
+  }
+  nav a:hover {
+    text-decoration: underline;
+  }
 </style>

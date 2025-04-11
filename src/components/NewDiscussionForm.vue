@@ -22,6 +22,9 @@ function addDiscussion() {
     return;
   }
   discussion.value.date = new Date();
+  discussion.value.responselist = ref([]);
+  discussion.upvote = 0;
+  discussion.downvote = 0;
   emit("discussionAdded", discussion.value);
   discussion.value.titre = "";
   discussion.value.contenu = "";
