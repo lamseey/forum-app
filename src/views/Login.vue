@@ -29,7 +29,7 @@ const { email, password, error, login } = useLogin();
 .register-grid {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    width: 30%;
+    width: 40%;
     text-align: left;
     row-gap: 10px;
 }
