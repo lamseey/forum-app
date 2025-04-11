@@ -1,30 +1,27 @@
-import { projectAuth } from "@/firebase/config"
-import { ref } from "vue"
-
-const error = ref(null)
-
-const signup = async (email, password, displayName) => {
-    error.value = null
-    try {
-        const response = await projectAuth.createUserWithEmailAndPassword(email, password)
-
-        if(!response)
-            throw new Error('Could not signup')
-        console.log(response.user)
-        
-        //update the value of displayName
-        await response.user.updateProfile({displayName: displayName})
-        error.value = null
-        return response
-    } catch (err) {
-        console.log(err)
-        error.value = err.message
-    }
-
-}
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 const useSignup = () => {
-    return {error, signup}
-}
+  const email = ref('');
+  const password = ref('');
+  const error = ref(null);
+  const router = useRouter();
 
-export default useSignup
+  const register = async () => {
+    error.value = null;
+    try {
+      const auth = getAuth();
+      await createUserWithEmailAndPassword(auth, email.value, password.value);
+      console.log('Registered successfully');
+      router.push('/');
+    } catch (err) {
+      console.error('Registration error:', err);
+      error.value = err.message;
+    }
+  };
+
+  return { email, password, error, register };
+};
+
+export default useSignup;
