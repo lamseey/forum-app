@@ -5,13 +5,15 @@
 </template>
 
 <style>
-  * {
-    text-align: left;
-  }
+* {
+  text-align: left;
+}
 </style>
 
 <script setup>
-import { ref } from 'vue'
-import NavBar from '/src/components/Navbar.vue'
-import DiscussionList from "/src/components/DiscussionList.vue"
+import { onMounted, ref } from "vue";
+import NavBar from "/src/components/Navbar.vue";
+import DiscussionList from "/src/components/DiscussionList.vue";
+import getUser from "@/composables/getUser";
+
 </script>
