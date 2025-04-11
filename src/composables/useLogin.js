@@ -1,28 +1,27 @@
-import { projectAuth } from "@/firebase/config"
-import { ref } from "vue"
-
-const error = ref(null)
-
-const login = async (email, password) => {
-    error.value = null
-    try {
-        const response = await projectAuth.signInWithEmailAndPassword(email, password)
-        error.value = null
-        console.log(response)
-        return response
-    } catch (err) {
-      //  console.log('---> Error GEN = ',err)
-        //console.log('---> Error CODE = ',err.code)
-       // const erreur = JSON.parse(err.message)
-        console.log('---> Error MESSAGE : ',JSON.parse(err.message).error.message)
-        //console.log('---> Error DATA : ',err.response.message)
-        error.value = JSON.parse(err.message).error.message
-    }
-
-}
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 const useLogin = () => {
-    return {error, login}
-}
+  const email = ref('');
+  const password = ref('');
+  const error = ref(null);
+  const router = useRouter();
 
-export default useLogin
+  const login = async () => {
+    error.value = null;
+    try {
+      const auth = getAuth();
+      await signInWithEmailAndPassword(auth, email.value, password.value);
+      console.log('Logged in successfully');
+      router.push('/');
+    } catch (err) {
+      console.error('Login error:', err);
+      error.value = err.message;
+    }
+  };
+
+  return { email, password, error, login };
+};
+
+export default useLogin;
