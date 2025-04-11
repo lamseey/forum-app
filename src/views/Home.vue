@@ -15,5 +15,10 @@
 </style>
 
 <script setup>
+import { onMounted } from "vue";
 import DiscussionList from "/src/components/DiscussionList.vue";
+import getUser from "@/composables/getUser";
+onMounted(() => {
+  getUser();
+});
 </script>
