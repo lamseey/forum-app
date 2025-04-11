@@ -1,9 +1,7 @@
 <template>
   <NewDiscussionForm></NewDiscussionForm>
   <div v-for="discussion in discussions" :key="discussion.id">
-    <h2>{{ discussion.data().titre }}</h2>
-    <p>{{ discussion.data().contenu }}</p>
-    <p>{{ discussion.data().date.toDate().toLocaleString() }}</p>
+    <DiscussionItem :discussion="discussion" />
   </div>
 
 </template>
@@ -11,19 +9,29 @@
 <script setup>
 import NewDiscussionForm from "/src/components/NewDiscussionForm.vue";
 import { ref, onMounted } from 'vue';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "/src/firebase";
+import DiscussionItem from "@/components/DiscussionItem.vue";
 
 const discussions = ref([]);
 
-function fetchDiscussions() {
-  const query = getDocs(collection(db, "discussions"));
-  discussions.value = query.docs;
+async function fetchDiscussions() {
+  const query = await getDocs(collection(db, "discussions"));
+  discussions.value = query.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(), // Extract the document data
+  }));
 }
-
 onMounted(() => {
   fetchDiscussions();
 })
+
+function updateDiscussions(newDiscussion) {
+  // add to database
+  addDoc(collection(db, "discussions"), newDiscussion);
+  alert("Discussion added " + newDiscussion.titre);
+  fetchDiscussions();
+}
 
 
 </script>

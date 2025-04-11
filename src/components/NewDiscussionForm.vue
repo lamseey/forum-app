@@ -11,9 +11,8 @@
 
 <script setup>
 import { ref } from 'vue';
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "/src/firebase";
 
+const emit = defineEmits(["discussionAdded"]);
 
 function addDiscussion() {
   if (discussion.value.titre === "" || discussion.value.contenu === "") {
@@ -21,14 +20,9 @@ function addDiscussion() {
     return;
   }
   discussion.value.date = new Date();
-  addDoc(collection(db, "discussions"), {
-    titre: discussion.value.titre,
-    contenu: discussion.value.contenu,
-    date: discussion.value.date,
-  });
+  emit("discussionAdded", discussion.value);
   discussion.value.titre = "";
   discussion.value.contenu = "";
-  alert("Discussion added successfully");
   addForm.value = false;
 }
 
