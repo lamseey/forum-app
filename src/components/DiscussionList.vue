@@ -1,22 +1,17 @@
 <template>
-  <NewDiscussionForm @discussion-added="updateDiscussions"></NewDiscussionForm>
-  
-  <!-- Loading message while fetching discussions -->
-  <div v-if="loading" class="loading-title">Loading...</div>
-  
   <div class="discussion-list">
     <div v-for="discussion in discussions" :key="discussion.id" class="discussion-item">
-      <DiscussionItem :discussion="discussion" />
+      <DiscussionItem @response-added="fetchDiscussions" :discussion="discussion" />
     </div>
   </div>
 </template>
 
 <script setup>
-import NewDiscussionForm from "/src/components/NewDiscussionForm.vue";
 import { ref, onMounted } from 'vue';
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "/src/firebase";
 import DiscussionItem from "@/components/DiscussionItem.vue";
+import NewResponseForm from "@/components/NewResponseForm.vue";
 
 const discussions = ref([]);
 const loading = ref(true); // Adding loading state

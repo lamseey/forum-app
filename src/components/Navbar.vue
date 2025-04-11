@@ -3,10 +3,25 @@
     <router-link to="/">Home</router-link>
     <router-link to="/register">Register</router-link>
     <router-link to="/login">Login</router-link>
+    <button @click="logout">Logout</button>
   </nav>
+
 </template>
 
-<style>
+<script setup>
+import { auth } from "@/firebase";
+import { signOut } from "firebase/auth";
+const logout = async () => {
+  try {
+    await signOut(auth);
+    console.log("lougged out sucessfully");
+  } catch (err) {
+    console.log("there was a error while logging out");
+  }
+};
+</script>
+
+<style scoped>
   nav {
     background-color: #333;
     color: white;
@@ -22,3 +37,4 @@
     text-decoration: underline;
   }
 </style>
+>>>>>>> main
