@@ -1,5 +1,4 @@
 <template>
-  <NavBar></NavBar>
   <h1 id="homepage">HOME PAGE</h1>
   <DiscussionList></DiscussionList>
 </template>
@@ -16,6 +15,5 @@
 </style>
 
 <script setup>
-import NavBar from '/src/components/Navbar.vue'
 import DiscussionList from "/src/components/DiscussionList.vue"
 </script>

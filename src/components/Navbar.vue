@@ -7,15 +7,11 @@
 </template>
 
 <style>
-  * {
-    font-family: Arial, sans-serif;
-    font-size: 105%;
-    text-align: center;
-  }
   nav {
     background-color: #333;
     color: white;
     padding: 10px;
+    text-align: center;
   }
   nav a {
     color: white;
