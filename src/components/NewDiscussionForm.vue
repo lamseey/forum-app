@@ -39,6 +39,8 @@ let discussion = ref({
 <style scoped>
 .toggle-button {
   background-color: #007bff;
+  display: block;
+  margin: 0 auto;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -58,7 +60,10 @@ let discussion = ref({
   gap: 10px;
 }
 
-.form-input,
+
+.form-input{
+  text-align: center;
+}
 .form-textarea {
   width: 100%;
   padding: 10px;
@@ -73,6 +78,8 @@ let discussion = ref({
 }
 
 .submit-button {
+  display: block;
+  margin: 0 auto;
   background-color: #28a745;
   color: white;
   border: none;
