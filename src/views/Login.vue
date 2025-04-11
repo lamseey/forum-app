@@ -34,4 +34,3 @@ const { email, password, error, login } = useLogin();
     row-gap: 10px;
 }
 </style>
-  
