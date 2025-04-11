@@ -26,6 +26,8 @@ function addDiscussion() {
     contenu: discussion.value.contenu,
     date: discussion.value.date,
   });
+  discussion.value.titre = "";
+  discussion.value.contenu = "";
   alert("Discussion added successfully");
   addForm.value = false;
 }
