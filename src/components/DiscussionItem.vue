@@ -1,38 +1,73 @@
 <template>
   <div class="discussion-item">
     <button @click="DeleteDiscussion(discussion.id)"> Delete </button>
-    <div class="account">
-      <img :src="discussion.authorPDP" alt="">
-      <p>{{ discussion.authorName }}</p>
+    <button @click="editing = !editing"> {{(editing) ? "Confirm" : "Edit" }} </button>
+    <div v-if="editing">
+      <div class="account">
+        <img :src="discussion.authorPDP" alt="">
+        <p>{{ discussion.authorName }}</p>
+      </div>
+      <input class="discussion-title" v-model="discussion.titre" placeholder="titre"><br>
+      <input class="discussion-content" v-model="discussion.contenu" placeholder="contenu"><br>
+      <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
+      <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote }}</p>
+      <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote }}</p>
+      <button @click = UpdateDiscussion(discussion.id)>Confirm</button>
     </div>
-    <h2 class="discussion-title">{{ discussion.titre }}</h2>
-    <p class="discussion-content">{{ discussion.contenu }}</p>
-    <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
-    <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote }}</p>
-    <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote }}</p>
+    <div v-else>
+      <div class="account">
+        <img :src="discussion.authorPDP" alt="">
+        <p>{{ discussion.authorName }}</p>
+      </div>
+      <h2 class="discussion-title">{{ discussion.titre }}</h2>
+      <p class="discussion-content">{{ discussion.contenu }}</p>
+      <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
+      <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote }}</p>
+      <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote }}</p>
     <ResponseList :discussionId="discussion.id" />
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {ref} from "vue"
 import { db } from "/src/firebase";
-import { doc, deleteDoc } from "firebase/firestore";
+import { doc, deleteDoc, getDocs, collection, updateDoc } from "firebase/firestore";
 import ResponseList from "@/components/ResponseList.vue";
 
-defineProps({
+const props = defineProps({
   discussion: {
     type: Object,
     required: true
   }
 });
 
-const emit = defineEmits(["discussionDeleted"]);
+const emit = defineEmits(["discussionDeleted", "discussionEdited"]);
+let editing = ref(false);
 
 function DeleteDiscussion(id) {
   if (confirm("Are you sure you want to delete this discussion?")) {
-    deleteDoc(doc(db, "discussions", id))
+    deleteDoc(doc(db, "discussions", id));
+    deleteRecursive(id);
     emit("discussionDeleted", id);
+  }
+}
+
+function UpdateDiscussion(id) {
+  editing.value = false;
+  const updatedDiscussion = {... props.discussion};
+  updatedDiscussion.date = new Date();
+  updateDoc(doc(db, "discussions", id), updatedDiscussion);
+  emit("discussionEdited", id)
+}
+
+async function deleteRecursive(id) {
+  const query = await getDocs(collection(db, "responses"));
+  for (let i = 0; i < query.docs.length; i++){
+    if (query.docs[i].data().discussionId === id){
+      await deleteDoc(doc(db, "responses", query.docs[i].id))
+      await deleteRecursive(query.docs[i].id);
+    }
   }
 }
 

@@ -47,6 +47,15 @@ function addResponse() {
   response.value.authorPDP = userInfo.value.pdp;
   emit("responseAdded", response.value);
   addForm.value = false;
+  response.value = {
+    contenu: "",
+    date: new Date(),
+    upvote: 0,
+    downvote: 0,
+    discussionId: properties.discussionId,
+    authorName: "",
+    authorPDP: ""
+  };
 }
 
 </script>

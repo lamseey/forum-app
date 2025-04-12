@@ -3,7 +3,7 @@
     <NewResponseForm :discussion-id="discussionId" @response-added="addResponse" />
     <ul class="response-list-items">
       <li v-for="response in responses" :key="response.id" class="response-list-item">
-        <ResponseItem :response="response" />
+        <ResponseItem @response-edited="fetchResponses" @response-deleted="fetchResponses" :response="response" />
         <ResponseList :discussion-id="response.id" />
       </li>
     </ul>
