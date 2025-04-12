@@ -2,6 +2,7 @@
   <div class="discussion-item">
     <button @click="DeleteDiscussion(discussion.id)"> Delete </button>
     <button @click="editing = !editing"> {{(editing) ? "Confirm" : "Edit" }} </button>
+    <router-link v-if="inHome" :to="'/discussion/' + discussion.id"> View Details</router-link>
     <div v-if="editing">
       <div class="account">
         <img :src="discussion.authorPDP" alt="">
@@ -21,35 +22,46 @@
       </div>
       <h2 class="discussion-title">{{ discussion.titre }}</h2>
       <p class="discussion-content">{{ discussion.contenu }}</p>
-      <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
+      <p class="discussion-date"><strong>Date:</strong> {{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</p>
       <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote }}</p>
       <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote }}</p>
-    <ResponseList :discussionId="discussion.id" />
+      <ResponseList :discussionId="discussion.id" />
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref} from "vue"
+import {ref, watchEffect} from "vue"
 import { db } from "/src/firebase";
-import { doc, deleteDoc, getDocs, collection, updateDoc } from "firebase/firestore";
+import {doc, deleteDoc, getDocs, collection, updateDoc, getDoc} from "firebase/firestore";
 import ResponseList from "@/components/ResponseList.vue";
+import { useRoute } from "vue-router";
+
 
 const props = defineProps({
-  discussion: {
-    type: Object,
+  discussionId: {
+    type: String,
     required: true
   }
 });
+watchEffect(async () => {
+  await fetchDiscussion();
+});
 
-const emit = defineEmits(["discussionDeleted", "discussionEdited"]);
+
+const route = useRoute();
+const inHome = ref(false);
+if (route.path === "/") {
+  inHome.value = true;
+}
+
 let editing = ref(false);
 
 function DeleteDiscussion(id) {
   if (confirm("Are you sure you want to delete this discussion?")) {
     deleteDoc(doc(db, "discussions", id));
     deleteRecursive(id);
-    emit("discussionDeleted", id);
+    fetchDiscussion();
   }
 }
 
@@ -58,7 +70,7 @@ function UpdateDiscussion(id) {
   const updatedDiscussion = {... props.discussion};
   updatedDiscussion.date = new Date();
   updateDoc(doc(db, "discussions", id), updatedDiscussion);
-  emit("discussionEdited", id)
+  fetchDiscussion();
 }
 
 async function deleteRecursive(id) {
@@ -69,6 +81,17 @@ async function deleteRecursive(id) {
       await deleteRecursive(query.docs[i].id);
     }
   }
+}
+
+const discussion = ref({});
+
+async function fetchDiscussion() {
+  const mydoc = doc(db, "discussions", props.discussionId);
+  const docSnap = await getDoc(mydoc);
+  discussion.value = {
+    id: docSnap.id,
+    ...docSnap.data(),
+  };
 }
 
 </script>

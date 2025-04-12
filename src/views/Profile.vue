@@ -19,7 +19,7 @@ const userDoc = inject('userDoc')
 <style scoped>
 img {
   border-radius: 50%;
-  width: "52px";
-  height: "52px"
+  width: 52px;
+  height: 52px;
 }
 </style>

@@ -18,7 +18,7 @@ const routes = [
     component: AdminView
   },
   {
-    path: '/discussion',
+    path: '/discussion/:id',
     name: 'discussion-view',
     component: DiscussionView
   },

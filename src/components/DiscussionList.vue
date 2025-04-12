@@ -2,7 +2,7 @@
   <div class="discussion-list">
     <NewDiscussionForm @discussion-added="addDiscussion" />
     <div v-for="discussion in discussions" :key="discussion.id" class="discussion-item">
-      <DiscussionItem @discussion-edited="fetchDiscussions" @discussion-deleted="fetchDiscussions" :discussion="discussion" />
+      <DiscussionItem @discussion-edited="fetchDiscussions" @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
     </div>
   </div>
 </template>
