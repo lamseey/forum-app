@@ -25,8 +25,7 @@ const discussion = ref({
   downvote: 0,
   authorName: "",
   authorPDP: "",
-  date: new Date(),
-  responselist: [],
+  date: new Date()
 });
 
 function addDiscussion() {
@@ -42,6 +41,7 @@ function addDiscussion() {
 
   discussion.value.authorName = userInfo.value.username;
   discussion.value.authorPDP = userInfo.value.pdp;
+  discussion.value.date = new Date();
 
   emit("discussionAdded", { ...discussion.value });
 

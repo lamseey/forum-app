@@ -19,7 +19,7 @@ import NewResponseForm from "@/components/NewResponseForm.vue";
 
 const props = defineProps({
   discussionId: {
-    type: Number,
+    type: String,
     required: true
   }
 });
@@ -31,6 +31,7 @@ function addResponse(response) {
     alert("Please fill in all fields");
     return;
   }
+  response.discussionId = props.discussionId;
   addDoc(collection(db, "responses"), response);
   fetchResponses();
 }
