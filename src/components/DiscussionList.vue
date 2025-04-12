@@ -2,7 +2,7 @@
   <div class="discussion-list">
     <NewDiscussionForm @discussion-added="addDiscussion" />
     <div v-for="discussion in discussions" :key="discussion.id" class="discussion-item">
-      <DiscussionItem @discussion-deleted="fetchDiscussions" :discussion="discussion" />
+      <DiscussionItem @discussion-edited="fetchDiscussions" @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
     </div>
   </div>
 </template>
@@ -15,6 +15,7 @@ import DiscussionItem from "@/components/DiscussionItem.vue";
 import NewDiscussionForm from "@/components/NewDiscussionForm.vue";
 const discussions = ref([]);
 const loading = ref(true); // Adding loading state
+
 
 async function fetchDiscussions() {
   try {

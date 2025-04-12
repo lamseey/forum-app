@@ -3,7 +3,7 @@
     <NewResponseForm :discussion-id="discussionId" @response-added="addResponse" />
     <ul class="response-list-items">
       <li v-for="response in responses" :key="response.id" class="response-list-item">
-        <ResponseItem :response="response" />
+        <ResponseItem @response-edited="fetchResponses" @response-deleted="fetchResponses" :response="response" />
         <ResponseList :discussion-id="response.id" />
       </li>
     </ul>
@@ -19,7 +19,7 @@ import NewResponseForm from "@/components/NewResponseForm.vue";
 
 const props = defineProps({
   discussionId: {
-    type: Number,
+    type: String,
     required: true
   }
 });
@@ -31,6 +31,7 @@ function addResponse(response) {
     alert("Please fill in all fields");
     return;
   }
+  response.discussionId = props.discussionId;
   addDoc(collection(db, "responses"), response);
   fetchResponses();
 }

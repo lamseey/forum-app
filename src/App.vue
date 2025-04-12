@@ -29,7 +29,6 @@ watch(user, async (newUser) => {
           uid: newUser.uid,
           ...docSnap.data()
         }
-        console.log("User data:", userDoc.value)
       } else {
         console.log("No such user doc")
       }
