@@ -24,6 +24,7 @@ const discussion = ref({
   upvote: 0,
   downvote: 0,
   authorName: "",
+  authorId: "",
   authorPDP: "",
   date: new Date()
 });
@@ -42,6 +43,7 @@ function addDiscussion() {
   discussion.value.authorName = userInfo.value.username;
   discussion.value.authorPDP = userInfo.value.pdp;
   discussion.value.date = new Date();
+  discussion.value.authorId = userInfo.value.uid;
 
   emit("discussionAdded", { ...discussion.value });
 

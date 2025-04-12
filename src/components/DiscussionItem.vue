@@ -31,12 +31,15 @@
 </template>
 
 <script setup>
-import {ref, watchEffect} from "vue"
+import {inject, ref, watchEffect} from "vue"
 import { db } from "/src/firebase";
 import {doc, deleteDoc, getDocs, collection, updateDoc, getDoc} from "firebase/firestore";
 import ResponseList from "@/components/ResponseList.vue";
 import { useRoute } from "vue-router";
+import { onAuthStateChanged } from "firebase/auth";
+import getUser from "@/composables/getUser";
 
+const user = inject('userDoc');
 
 const props = defineProps({
   discussionId: {
