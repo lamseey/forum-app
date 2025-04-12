@@ -11,8 +11,12 @@
       <input class="discussion-title" v-model="discussion.titre" placeholder="titre"><br>
       <input class="discussion-content" v-model="discussion.contenu" placeholder="contenu"><br>
       <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
-      <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote }}</p>
-      <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote }}</p>
+      <div class="discussion-upvote">
+        <strong>Upvotes:</strong> {{ discussion.upvoters.size }}
+      </div>
+      <div class="discussion-downvote">
+        <strong>Upvotes:</strong> {{ discussion.downvote.size }}
+      </div>
       <button @click = UpdateDiscussion(discussion.id)>Confirm</button>
     </div>
     <div v-else>
