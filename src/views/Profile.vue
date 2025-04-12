@@ -12,5 +12,3 @@ import { inject } from 'vue'
 
 const userInfo = inject('userDoc')
 </script>
-
-
