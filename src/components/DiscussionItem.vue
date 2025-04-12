@@ -11,8 +11,12 @@
       <input class="discussion-title" v-model="discussion.titre" placeholder="titre"><br>
       <input class="discussion-content" v-model="discussion.contenu" placeholder="contenu"><br>
       <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
-      <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote }}</p>
-      <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote }}</p>
+      <div class="discussion-upvote">
+        <strong>Upvotes:</strong> {{ discussion.upvoters.size }}
+      </div>
+      <div class="discussion-downvote">
+        <strong>Upvotes:</strong> {{ discussion.downvote.size }}
+      </div>
       <button @click = UpdateDiscussion(discussion.id)>Confirm</button>
     </div>
     <div v-else>
@@ -32,12 +36,19 @@
 
 <script setup>
 import {ref, onMounted} from "vue"
+
 import { db } from "/src/firebase";
 import {doc, deleteDoc, getDocs, collection, updateDoc, getDoc} from "firebase/firestore";
 import ResponseList from "@/components/ResponseList.vue";
 import { useRoute } from "vue-router";
+import { onAuthStateChanged } from "firebase/auth";
+import getUser from "@/composables/getUser";
+
 
 const emit = defineEmits(["discussionDeleted"]);
+
+const user = inject('userDoc');
+
 
 const props = defineProps({
   discussionId: {

@@ -21,10 +21,11 @@ const addForm = ref(false);
 const discussion = ref({
   titre: "",
   contenu: "",
-  upvote: 0,
-  downvote: 0,
   authorName: "",
+  authorId: "",
   authorPDP: "",
+  upvoters: [],
+  downvoters: [],
   date: new Date()
 });
 
@@ -42,6 +43,7 @@ function addDiscussion() {
   discussion.value.authorName = userInfo.value.username;
   discussion.value.authorPDP = userInfo.value.pdp;
   discussion.value.date = new Date();
+  discussion.value.authorId = userInfo.value.uid;
 
   emit("discussionAdded", { ...discussion.value });
 
