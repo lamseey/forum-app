@@ -18,6 +18,7 @@
         <p v-if="successMessage" style="color: green;">{{ successMessage }}</p>
     </div>
 </template>
+  
 
 
 <script setup>
@@ -35,10 +36,12 @@ const forgotPassword = async () => {
   error.value = ''
   successMessage.value = ''
 
+
   if (!email.value) {
     error.value = 'Please enter your email to reset your password.'
     return
   }
+
 
   try {
     // Step 1: Look for a user in Firestore with the provided email
