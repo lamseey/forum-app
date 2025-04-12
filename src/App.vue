@@ -25,7 +25,10 @@ watch(user, async (newUser) => {
     try {
       const docSnap = await getDoc(doc(db, "users", newUser.uid))
       if (docSnap.exists()) {
-        userDoc.value = docSnap.data()
+        userDoc.value = {
+          uid: newUser.uid,
+          ...docSnap.data()
+        }
         console.log("User data:", userDoc.value)
       } else {
         console.log("No such user doc")
