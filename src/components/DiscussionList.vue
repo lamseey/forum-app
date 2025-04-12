@@ -14,20 +14,15 @@ import { db } from "/src/firebase";
 import DiscussionItem from "@/components/DiscussionItem.vue";
 import NewDiscussionForm from "@/components/NewDiscussionForm.vue";
 const discussions = ref([]);
-const loading = ref(true); // Adding loading state
-
 
 
 async function fetchDiscussions() {
-  try {
     const query = await getDocs(collection(db, "discussions"));
     discussions.value = query.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
-  } finally {
-    loading.value = false; // Turn off loading after fetching is complete
-  }
+
 }
 
 function addDiscussion(discussion) {
@@ -58,10 +53,4 @@ onMounted(() => {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.loading-title {
-  color:red;
-  text-align: center;
-  font-size: 1.2rem;
-  margin: 3rem;
-}
 </style>
