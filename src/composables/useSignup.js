@@ -34,6 +34,7 @@ const useSignup = () => {
         email: email.value,
         profilePicture: 'https://example.com/default-avatar.png', // Default profile pic (can be replaced)
         bio: bio.value,
+        blocked: false,
         pdp: pdp.value,
         birthday: birthday.value,
         createdAt: new Date(),

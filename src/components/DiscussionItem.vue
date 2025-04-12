@@ -17,12 +17,10 @@
       <h2 class="discussion-title">{{ discussion.titre }}</h2>
       <p class="discussion-content">{{ discussion.contenu }}</p>
     </div>
-    <button @click="addingCategories = !addingCategories"> {{(addingCategories) ? "Cancel" : "Add categories" }} </button><br>
-
-    <div v-if="addingCategories">
-      <input v-model="newCategory" placeholder="categories"><br>
-      <button @click="addCategory">Confirm</button>
-    </div>
+      <p><strong>Categories:</strong></p>
+      <ul>
+        <li v-for="category in discussion.categories" :key="category">{{ category }}</li>
+      </ul>
 
     <span v-if="discussion.edited">Edited </span>
       <span class="discussion-date"><strong>Date:</strong> {{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</span>
@@ -45,12 +43,6 @@ const discussion = ref({});
 const emit = defineEmits(["discussionDeleted"]);
 
 const user = inject('userDoc');
-const newCategory = ref("");
-const addingCategories = ref(false);
-
-function addCategory() {
-
-}
 
 
 const props = defineProps({
