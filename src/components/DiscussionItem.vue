@@ -1,36 +1,34 @@
 <template>
   <div v-if="discussion" class="discussion-item">
     <button @click="DeleteDiscussion(discussion.id)"> Delete </button>
-    <button @click="editing = !editing"> {{(editing) ? "Confirm" : "Edit" }} </button>
+    <button @click="editing = !editing"> {{(editing) ? "Cancel" : "Edit" }} </button>
     <router-link v-if="inHome" :to="'/discussion/' + discussion.id"> View Details</router-link>
-    <div v-if="editing">
-      <div class="account">
+    <div class="account">
         <img :src="discussion.authorPDP" alt="">
         <p>{{ discussion.authorName }}</p>
       </div>
+    <div v-if="editing">
       <input class="discussion-title" v-model="discussion.titre" placeholder="titre"><br>
       <input class="discussion-content" v-model="discussion.contenu" placeholder="contenu"><br>
-      <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
-      <div class="discussion-upvote">
-        <strong>Upvotes:</strong> {{ discussion.upvoters.size }}
-      </div>
-      <div class="discussion-downvote">
-        <strong>Upvotes:</strong> {{ discussion.downvote.size }}
-      </div>
-      <button @click = UpdateDiscussion(discussion.id)>Confirm</button>
+      <button @click="UpdateDiscussion(discussion.id)">Confirm</button>
     </div>
+
     <div v-else>
-      <div class="account">
-        <img :src="discussion.authorPDP" alt="">
-        <p>{{ discussion.authorName }}</p>
-      </div>
       <h2 class="discussion-title">{{ discussion.titre }}</h2>
       <p class="discussion-content">{{ discussion.contenu }}</p>
-      <p class="discussion-date"><strong>Date:</strong> {{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</p>
-      <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote }}</p>
-      <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote }}</p>
-      <ResponseList :discussionId="discussion.id" />
     </div>
+    <button @click="addingCategories = !addingCategories"> {{(addingCategories) ? "Cancel" : "Add categories" }} </button><br>
+
+    <div v-if="addingCategories">
+      <input v-model="newCategory" placeholder="categories"><br>
+      <button @click="addCategory">Confirm</button>
+    </div>
+
+    <span v-if="discussion.edited">Edited </span>
+      <span class="discussion-date"><strong>Date:</strong> {{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</span>
+      <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote?.size || 0 }}</p>
+      <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote?.size || 0 }}</p>
+      <ResponseList :discussionId="discussion.id" />
   </div>
 </template>
 
@@ -42,10 +40,17 @@ import {doc, deleteDoc, getDocs, collection, updateDoc, getDoc} from "firebase/f
 import ResponseList from "@/components/ResponseList.vue";
 import { useRoute } from "vue-router";
 
+const discussion = ref({});
 
 const emit = defineEmits(["discussionDeleted"]);
 
 const user = inject('userDoc');
+const newCategory = ref("");
+const addingCategories = ref(false);
+
+function addCategory() {
+
+}
 
 
 const props = defineProps({
@@ -76,10 +81,11 @@ function DeleteDiscussion(id) {
 }
 
 function UpdateDiscussion(id) {
-  editing.value = false;
-  const updatedDiscussion = {... props.discussion};
+  const updatedDiscussion = {... discussion.value};
   updatedDiscussion.date = new Date();
+  updatedDiscussion.edited = true;
   updateDoc(doc(db, "discussions", id), updatedDiscussion);
+  editing.value = false;
   fetchDiscussion();
 }
 
@@ -92,8 +98,6 @@ async function deleteRecursive(id) {
     }
   }
 }
-
-const discussion = ref({});
 
 async function fetchDiscussion() {
   const mydoc = doc(db, "discussions", props.discussionId);
