@@ -1,5 +1,5 @@
 <template>
-  <div class="discussion-item">
+  <div v-if="discussion" class="discussion-item">
     <button @click="DeleteDiscussion(discussion.id)"> Delete </button>
     <button @click="editing = !editing"> {{(editing) ? "Confirm" : "Edit" }} </button>
     <router-link v-if="inHome" :to="'/discussion/' + discussion.id"> View Details</router-link>
@@ -35,7 +35,8 @@
 </template>
 
 <script setup>
-import {inject, ref, watchEffect} from "vue"
+import {ref, onMounted} from "vue"
+
 import { db } from "/src/firebase";
 import {doc, deleteDoc, getDocs, collection, updateDoc, getDoc} from "firebase/firestore";
 import ResponseList from "@/components/ResponseList.vue";
@@ -43,7 +44,11 @@ import { useRoute } from "vue-router";
 import { onAuthStateChanged } from "firebase/auth";
 import getUser from "@/composables/getUser";
 
+
+const emit = defineEmits(["discussionDeleted"]);
+
 const user = inject('userDoc');
+
 
 const props = defineProps({
   discussionId: {
@@ -51,7 +56,7 @@ const props = defineProps({
     required: true
   }
 });
-watchEffect(async () => {
+onMounted(async () => {
   await fetchDiscussion();
 });
 
@@ -68,7 +73,7 @@ function DeleteDiscussion(id) {
   if (confirm("Are you sure you want to delete this discussion?")) {
     deleteDoc(doc(db, "discussions", id));
     deleteRecursive(id);
-    fetchDiscussion();
+    emit("discussionDeleted", id);
   }
 }
 
