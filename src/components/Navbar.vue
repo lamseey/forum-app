@@ -1,7 +1,7 @@
 <template>
   <nav>
     <router-link to="/">Squak</router-link>
-    <div v-if="userloggedin">
+    <div v-if="!logged_in">
       <router-link to="/register">Register</router-link>
       <router-link to="/login">Login</router-link>
     </div>
@@ -9,31 +9,33 @@
       <router-link to="/profile">Profile</router-link>
       <button class="logout" @click="logout">Logout</button>
     </div>
+      <div v-if="logged_in" class="account">
+        <img :src="userInfo?.pdp" >
+        <p>{{ userInfo?.username }}</p>
+      </div>
+      <div v-else>
+        Guest
+      </div>
   </nav>
-
 </template>
 
 <script setup>
-import { auth } from "@/firebase";
-import { signOut, onAuthStateChanged } from "firebase/auth";
-import getUser from "@/composables/getUser";
-import { ref } from "vue";
-import { getAuth} from "firebase/auth";
-import router from "@/router";
+import { inject } from 'vue'
+import { signOut } from "firebase/auth"
+import { auth } from "@/firebase"
+import router from "@/router"
+
+const logged_in = inject('logged_in')
+const userInfo = inject('userDoc')
 const logout = async () => {
   try {
-    await signOut(auth);
-    console.log("lougged out sucessfully");
-    router.push("/");
+    await signOut(auth)
+    console.log("Logged out successfully")
+    router.push("/")
   } catch (err) {
-    console.log("there was a error while logging out");
+    console.log("Error while logging out:", err)
   }
-};
-
-const userloggedin = ref(getUser() == null)
-onAuthStateChanged(getAuth(), (_user) => {
-  userloggedin.value = _user == null;
-})
+}
 </script>
 
 <style scoped>
@@ -58,7 +60,7 @@ nav a {
   transition: background-color 0.3s, transform 0.2s;
 }
 
-.logout{
+.logout {
   background-color: #f44336;
   color: white;
   border: none;
@@ -75,7 +77,6 @@ nav a {
   transform: scale(0.95);
 }
 
-
 nav a:hover {
   background-color: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
@@ -84,4 +85,14 @@ nav a:hover {
 nav a:active {
   transform: scale(1.05);
 }
+.account {
+  display: flex;
+  margin-left: 20px;
+}
+img {
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+}
+
 </style>
