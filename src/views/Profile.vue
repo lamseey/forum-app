@@ -1,10 +1,9 @@
 <template>
   <h1>Profile PAGE</h1>
-  <div v-if="logged_in">
-    <h2>{{ userDoc?.username }}</h2>
-    <p>{{ userDoc?.bio }}</p>
-    <img :src="userDoc?.pdp" alt="" />
-  </div>
+  <div v-if="logged_in" class="account">
+      <img :src="userInfo?.pdp" >
+      <p>{{ userInfo?.username }}</p>
+    </div>
   <div v-else>
     <p>You're not logged in</p>
   </div>

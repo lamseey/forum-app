@@ -11,8 +11,9 @@
   </div>
 </template>
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, inject } from 'vue';
 
+const userInfo = inject('userDoc')
 let properties = defineProps({
   discussionId: {
     type: String,
@@ -24,9 +25,12 @@ const emit = defineEmits(["responseAdded"]);
 
 let response = ref({
   contenu: "",
-  date: null,
+  date: new Date(),
   upvote: 0,
   downvote: 0,
+  discussionId: properties.discussionId,
+  authorName: "",
+  authorPDP: ""
 });
 
 const addForm = ref(false);
@@ -35,8 +39,12 @@ function addResponse() {
     alert("Please fill in all fields");
     return;
   }
-  response.value.date = new Date();
-  response.value.discussionId = properties.discussionId;
+  if (!userInfo.value) {
+    alert("You need to login or create an account first");
+    return;
+  }
+  response.value.authorName = userInfo.value.username;
+  response.value.authorPDP = userInfo.value.pdp;
   emit("responseAdded", response.value);
   addForm.value = false;
 }

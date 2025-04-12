@@ -1,6 +1,10 @@
 <template>
   <div class="discussion-item">
     <button @click="DeleteDiscussion(discussion.id)"> Delete </button>
+    <div class="account">
+      <img :src="discussion.authorPDP" alt="">
+      <p>{{ discussion.authorName }}</p>
+    </div>
     <h2 class="discussion-title">{{ discussion.titre }}</h2>
     <p class="discussion-content">{{ discussion.contenu }}</p>
     <p class="discussion-date"><strong>Date:</strong> {{ discussion.date.toDate().toLocaleString() }}</p>
@@ -66,4 +70,26 @@ function DeleteDiscussion(id) {
   font-size: 14px;
   color: #777;
 }
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  margin: 10px 0;
+}
+
+.account img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+.account p {
+  margin: 0;
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1em;
+}
+
 </style>
