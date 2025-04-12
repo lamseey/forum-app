@@ -12,32 +12,46 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, inject } from 'vue';
 
+const userInfo = inject('userDoc'); 
 const emit = defineEmits(["discussionAdded"]);
 
+const addForm = ref(false);
+const discussion = ref({
+  titre: "",
+  contenu: "",
+  upvote: 0,
+  downvote: 0,
+  authorName: "",
+  authorPDP: "",
+  date: new Date(),
+  responselist: [],
+});
+
 function addDiscussion() {
-  if (discussion.value.titre === "" || discussion.value.contenu === "") {
+  if (!discussion.value.titre || !discussion.value.contenu) {
     alert("Please fill in all fields");
     return;
   }
-  discussion.value.date = new Date();
-  discussion.value.responselist = ref([]);
-  discussion.upvote = 0;
-  discussion.downvote = 0;
-  emit("discussionAdded", discussion.value);
+
+  if (!userInfo?.value) {
+    alert("You need to login or create an account first");
+    return;
+  }
+
+  discussion.value.authorName = userInfo.value.username;
+  discussion.value.authorPDP = userInfo.value.pdp;
+
+  emit("discussionAdded", { ...discussion.value });
+
+  // reset form
   discussion.value.titre = "";
   discussion.value.contenu = "";
   addForm.value = false;
 }
-
-let addForm = ref(false);
-let discussion = ref({
-  titre: "",
-  contenu: "",
-  date: new Date(),
-});
 </script>
+
 
 <style scoped>
 .toggle-button {

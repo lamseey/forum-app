@@ -85,14 +85,25 @@ nav a:hover {
 nav a:active {
   transform: scale(1.05);
 }
+
 .account {
   display: flex;
-  margin-left: 20px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
 }
-img {
+
+.account img {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  width: 52px;
-  height: 52px;
+}
+
+.account p {
+  margin: 0;
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1em;
 }
 
 </style>
