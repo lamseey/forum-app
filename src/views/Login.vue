@@ -7,7 +7,7 @@
         <label>Password : </label>
         <input type="password" placeholder="Password" v-model="password" />
         </div>
-        
+
         <!-- Forgot Password -->
         <a href="#" @click.prevent="forgotPassword" style="align-self: flex-start; margin-left: 30%;">
         Forgot Password?
@@ -19,6 +19,7 @@
     </div>
 </template>
   
+
 
 <script setup>
 import { ref } from 'vue'
@@ -35,10 +36,12 @@ const forgotPassword = async () => {
   error.value = ''
   successMessage.value = ''
 
+
   if (!email.value) {
     error.value = 'Please enter your email to reset your password.'
     return
   }
+
 
   try {
     // Step 1: Look for a user in Firestore with the provided email

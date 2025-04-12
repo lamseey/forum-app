@@ -26,6 +26,8 @@ const discussion = ref({
   authorPDP: "",
   upvoters: [],
   downvoters: [],
+  categories: [],
+  edited: false,
   date: new Date()
 });
 

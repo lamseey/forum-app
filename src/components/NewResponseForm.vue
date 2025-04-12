@@ -14,7 +14,7 @@
 import { ref, defineProps, inject } from 'vue';
 
 const userInfo = inject('userDoc')
-let properties = defineProps({
+let props = defineProps({
   discussionId: {
     type: String,
     required: true
@@ -26,11 +26,12 @@ const emit = defineEmits(["responseAdded"]);
 let response = ref({
   contenu: "",
   date: new Date(),
-  upvote: 0,
-  downvote: 0,
-  discussionId: properties.discussionId,
+  upvote: [],
+  downvote: [],
+  discussionId: props.discussionId,
   authorName: "",
-  authorPDP: ""
+  authorPDP: "",
+  edited: false
 });
 
 const addForm = ref(false);
@@ -50,9 +51,9 @@ function addResponse() {
   response.value = {
     contenu: "",
     date: new Date(),
-    upvote: 0,
-    downvote: 0,
-    discussionId: properties.discussionId,
+    upvote: [],
+    downvote: [],
+    discussionId: props.discussionId,
     authorName: "",
     authorPDP: ""
   };

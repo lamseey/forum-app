@@ -1,28 +1,24 @@
 <template>
   <div class="response-item">
-    <button @click="DeleteDiscussion(response.id)"> Delete </button>
-    <button @click="editing = !editing"> {{(editing) ? "Confirm" : "Edit" }}</button>
+    <button @click="DeleteResponse(response.id)"> Delete </button>
+    <button @click="editing = !editing"> {{(editing) ? "Cancel" : "Edit" }} </button>
+    <div class="account">
+        <img :src="response.authorPDP" alt="">
+        <p>{{ response.authorName }}</p>
+      </div>
     <div v-if="editing">
-      <div class="account">
-        <img :src="response.authorPDP" alt="">
-        <p>{{ response.authorName }}</p>
-      </div>
-      <input v-model="response.contenu" placeholder="contenu"> <br>
-      <p class="response-upvote"><strong>Upvotes:</strong> {{ response.upvote }}</p>
-      <p class="response-downvote"><strong>Downvotes:</strong> {{ response.downvote }}</p>
-      <p class="response-date"><strong>Date:</strong> {{ response.date.toDate().toLocaleString() }}</p>
-      <button @click = UpdateResponse(response.id)>Confirm</button>
+      <input class="discussion-content" v-model="response.contenu" placeholder="contenu"><br>
+      <button @click="UpdateResponse(response.id)">Confirm</button>
     </div>
+
     <div v-else>
-      <div class="account">
-        <img :src="response.authorPDP" alt="">
-        <p>{{ response.authorName }}</p>
-      </div>
-      <p class="response-content">{{ response.contenu }}</p>
-      <p class="response-upvote"><strong>Upvotes:</strong> {{ response.upvote }}</p>
-      <p class="response-downvote"><strong>Downvotes:</strong> {{ response.downvote }}</p>
-      <p class="response-date"><strong>Date:</strong> {{ response.date.toDate().toLocaleString() }}</p>
+      <p class="discussion-content">{{ response.contenu }}</p>
     </div>
+
+    <span v-if="response.edited">Edited </span>
+      <span class="discussion-date"><strong>Date:</strong> {{ response.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</span>
+      <p class="discussion-upvote"><strong>Upvotes:</strong> {{ response.upvote?.size || 0 }}</p>
+      <p class="discussion-downvote"><strong>Downvotes:</strong> {{ response.downvote?.size || 0 }}</p>
   </div>
 </template>
 
@@ -42,7 +38,7 @@ let props = defineProps({
 
 let editing = ref(false);
 
-function DeleteDiscussion(id) {
+function DeleteResponse(id) {
   if (confirm("Are you sure you want to delete this discussion?")) {
     deleteDoc(doc(db, "responses", id));
     deleteRecursive(id);

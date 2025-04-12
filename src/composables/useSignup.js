@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { getFirestore, doc, addDoc } from 'firebase/firestore';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const useSignup = () => {
   const email = ref('');
@@ -29,7 +29,7 @@ const useSignup = () => {
       });
 
       // Add user to Firestore
-      await addDoc(doc(db, 'users', user.uid), {
+      await setDoc(doc(db, 'users', user.uid), {
         username: username.value,
         email: email.value,
         profilePicture: 'https://example.com/default-avatar.png', // Default profile pic (can be replaced)

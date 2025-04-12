@@ -12,7 +12,7 @@
 
 <script setup>
 import ResponseItem from "@/components/ResponseItem.vue";
-import {defineProps, ref, onMounted} from 'vue';
+import {defineProps, ref, onMounted, watch} from 'vue';
 import {db} from "@/firebase";
 import {collection, getDocs, addDoc} from "firebase/firestore";
 import NewResponseForm from "@/components/NewResponseForm.vue";
@@ -26,24 +26,37 @@ const props = defineProps({
 
 let responses = ref([]);
 
+watch(() => props.discussionId, async () => {
+  await fetchResponses();
+});
+
+
+async function fetchResponses() {
+  console.log(props.discussionId);
+  const query = await getDocs(collection(db, "responses"));
+  responses.value = query.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  })).filter(response => response.discussionId === props.discussionId);
+  console.log(responses.value.length)
+}
+
+
+console.log(responses.value);
+
 function addResponse(response) {
   if (response.contenu === "") {
     alert("Please fill in all fields");
     return;
   }
   response.discussionId = props.discussionId;
+  response.date = new Date();
   addDoc(collection(db, "responses"), response);
   fetchResponses();
 }
 
-async function fetchResponses() {
-  const query = await getDocs(collection(db, "responses"));
-  responses.value = query.docs.map(doc => ({
-    id: doc.id, ...doc.data()
-  })).filter(response => response.discussionId === props.discussionId);
-}
-
-onMounted(() => {
+onMounted( () => {
+  console.log("fetchResponses");
   fetchResponses();
 });
 </script>
