@@ -11,6 +11,8 @@
         <p v-else> state: trusted</p>
         <button v-if="userInfo != null && userInfo.role == 'moderator' && user.role == 'user'" @click="makeUserModerator">Make Moderator</button>
         <button v-if="userInfo != null && userInfo.role == 'moderator' && user.role == 'moderator'" @click="revokeModerator">Revoke Moderator</button>
+        <button v-if="userInfo != null && userInfo.role == 'moderator' && user.blocked == false" @click="block" >Block</button>
+        <button v-if="userInfo != null && userInfo.role == 'moderator' && user.blocked == true" @click="block" >Unblocked</button>
     </div>
 </template>
 
@@ -45,6 +47,19 @@ async function revokeModerator() {
     })
     user.value.role = 'user';
     console.log('user is not longer moderator!');
+
+  } catch (error) {
+    console.error("can't make moderator", error);
+  }
+}
+
+async function block() {
+    const userRef = doc(db, 'users', id);
+    try {
+        await updateDoc(userRef, {
+        blocked: !user.value.blocked,
+    })
+    user.value.blocked = !user.value.blocked;
 
   } catch (error) {
     console.error("can't make moderator", error);
