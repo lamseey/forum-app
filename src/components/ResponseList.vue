@@ -1,9 +1,19 @@
 <template>
   <div class="response-list">
+    <!-- New Response Form -->
     <NewResponseForm :discussion-id="discussionId" @response-added="addResponse" />
-    <ul class="response-list-items">
-      <li v-for="response in responses" :key="response.id" class="response-list-item">
-        <ResponseItem @response-edited="fetchResponses" @response-deleted="fetchResponses" :response="response" />
+
+    <!-- Responses List -->
+    <ul class="list-group mt-3">
+      <li v-for="response in responses" :key="response.id" class="list-group-item border rounded-3 mb-3">
+        <!-- Response Item -->
+        <ResponseItem 
+          @response-edited="fetchResponses" 
+          @response-deleted="fetchResponses" 
+          :response="response" 
+        />
+        
+        <!-- Nested Responses List (if any) -->
         <ResponseList :discussion-id="response.id" />
       </li>
     </ul>
@@ -12,9 +22,9 @@
 
 <script setup>
 import ResponseItem from "@/components/ResponseItem.vue";
-import {defineProps, ref, onMounted, watch} from 'vue';
-import {db} from "@/firebase";
-import {collection, getDocs, addDoc} from "firebase/firestore";
+import { defineProps, ref, onMounted, watch } from 'vue';
+import { db } from "@/firebase";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import NewResponseForm from "@/components/NewResponseForm.vue";
 
 const props = defineProps({
@@ -26,23 +36,19 @@ const props = defineProps({
 
 let responses = ref([]);
 
+// Watch for changes in discussionId and fetch responses accordingly
 watch(() => props.discussionId, async () => {
   await fetchResponses();
 });
 
-
+// Fetch responses for the current discussion
 async function fetchResponses() {
-  console.log(props.discussionId);
   const query = await getDocs(collection(db, "responses"));
   responses.value = query.docs.map(doc => ({
     id: doc.id,
     ...doc.data(),
   })).filter(response => response.discussionId === props.discussionId);
-  console.log(responses.value.length)
 }
-
-
-console.log(responses.value);
 
 function addResponse(response) {
   if (response.contenu === "") {
@@ -55,8 +61,7 @@ function addResponse(response) {
   fetchResponses();
 }
 
-onMounted( () => {
-  console.log("fetchResponses");
+onMounted(() => {
   fetchResponses();
 });
 </script>
@@ -70,28 +75,33 @@ onMounted( () => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.response-list-items {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.response-list-item {
-  margin-bottom: 15px;
-  padding: 10px;
+.list-group-item {
+  padding: 15px;
+  font-size: 1rem;
   background-color: #ffffff;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
-  font-size : 85%;
 }
 
-.response-list-item:hover {
+.list-group-item:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.response-list-item:last-child {
-  margin-bottom: 0;
+textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  font-size: 1rem;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
 }
 
 button {
@@ -108,17 +118,30 @@ button:hover {
   background-color: #0056b3;
 }
 
-textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  resize: vertical;
+button:focus {
+  outline: none;
 }
 
-textarea:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+.response-list-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.response-list-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  transition: box-shadow 0.3s ease;
+}
+
+.response-list-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.response-list-item:last-child {
+  margin-bottom: 0;
 }
 </style>

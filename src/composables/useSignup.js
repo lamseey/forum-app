@@ -32,14 +32,12 @@ const useSignup = () => {
       await setDoc(doc(db, 'users', user.uid), {
         username: username.value,
         email: email.value,
-        profilePicture: 'https://example.com/default-avatar.png', // Default profile pic (can be replaced)
         bio: bio.value,
         blocked: false,
-        pdp: pdp.value,
+        pdp: pdp.value ? pdp.value : 'https://i.postimg.cc/05zJ6r52/duck-default.png', 
         birthday: birthday.value,
         createdAt: new Date(),
         role: "user",
-        blocked: false,
       });
 
       console.log('Registered and user data saved to Firestore.');
