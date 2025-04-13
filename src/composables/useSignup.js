@@ -39,6 +39,7 @@ const useSignup = () => {
         birthday: birthday.value,
         createdAt: new Date(),
         role: "user",
+        blocked: false,
       });
 
       console.log('Registered and user data saved to Firestore.');
