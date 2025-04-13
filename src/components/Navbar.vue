@@ -1,21 +1,62 @@
 <template>
-  <nav>
-    <router-link to="/">Squak</router-link>
-    <div v-if="!logged_in">
-      <router-link to="/register">Register</router-link>
-      <router-link to="/login">Login</router-link>
-    </div>
-    <div v-else>
-      <router-link to="/profile">Profile</router-link>
-      <button class="logout" @click="logout">Logout</button>
-    </div>
-      <div v-if="logged_in" class="account">
-        <img :src="userInfo?.pdp" >
-        <p>{{ userInfo?.username }}</p>
+  <nav class="navbar navbar-expand-lg px-4 py-2 shadow" style="background-color: #2e7d32;">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+
+      <!-- Logo qui redirige vers le HOME -->
+      <router-link class="navbar-brand d-flex align-items-center text-white fw-bold fs-4 me-4" to="/">
+        <img src="https://i.postimg.cc/XvNcyxhR/Logo-Sqwak.png" alt="logo" width="40" class="me-2">
+        Sqwak
+      </router-link>
+
+      <!-- Barre de Recherche -->
+      <form class="d-flex flex-grow-1 mx-4" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search Squaks..." aria-label="Search">
+        <button class="btn btn-light" type="submit">Search</button>
+      </form>
+
+      <!-- User / Guest section -->
+      <div class="d-flex align-items-center position-relative">
+
+      <!-- Notification icon (always takes space, toggles visibility) -->
+      <div class="notif-placeholder me-3">
+        <button class="btn position-relative text-white p-0" v-show="logged_in">
+          <i class="bi bi-bell-fill fs-5"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            3
+          </span>
+        </button>
       </div>
-      <div v-else>
-        Guest
+
+        <!-- Dropdown -->
+        <div class="dropdown">
+          <button class="btn dropdown-toggle d-flex align-items-center text-white" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <img
+              v-if="logged_in"
+              :src="userInfo?.pdp"
+              alt="pdp"
+              class="rounded-circle me-2"
+              width="40"
+              height="40"
+            />
+            <span class="fw-semibold">{{ logged_in ? userInfo?.username : 'Guest' }}</span>
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <template v-if="!logged_in">
+              <li><router-link class="dropdown-item" to="/register">Register</router-link></li>
+              <li><router-link class="dropdown-item" to="/login">Login</router-link></li>
+            </template>
+            <template v-else>
+              <li><router-link class="dropdown-item" to="/profile">View Profile</router-link></li>
+              <li><button class="dropdown-item text-danger" @click="logout">Logout</button></li>
+            </template>
+          </ul>
+        </div>
       </div>
+    </div>
+
+    <!-- Bottom brown border -->
+    <div class="brown-accent position-absolute bottom-0 start-0 w-100" style="height: 6px;"></div>
   </nav>
 </template>
 
@@ -39,71 +80,39 @@ const logout = async () => {
 </script>
 
 <style scoped>
-nav {
-  background: linear-gradient(90deg, #4caf50, #81c784);
-  padding: 15px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+.brown-accent {
+  background-color: #915039;
+  border-radius: 0 0 8px 8px;
 }
 
-nav a {
-  color: white;
-  font-size: 1.2em;
-  font-weight: bold;
-  text-decoration: none;
-  margin: 0 15px;
-  padding: 8px 12px;
-  border-radius: 5px;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.logout {
-  background-color: #f44336;
+.btn-brown {
+  background-color: #915039;
   color: white;
   border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1.2em;
 }
-.logout:hover {
-  background-color: #d32f2f;
-  transform: scale(1.05);
-}
-.logout:active {
-  transform: scale(0.95);
-}
-
-nav a:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
-}
-
-nav a:active {
+.btn-brown:hover {
+  background-color: #9c5d46;
   transform: scale(1.05);
 }
 
-.account {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 15px;
-}
-
-.account img {
-  width: 48px;
-  height: 48px;
+.navbar-brand img {
   border-radius: 50%;
 }
 
-.account p {
-  margin: 0;
-  font-weight: bold;
-  color: #333;
-  font-size: 1.1em;
+button, .btn {
+  transition: transform 0.2s ease;
+}
+
+.dropdown-toggle::after {
+  display: none; /* optional: hide arrow if you don't like it */
+}
+
+.notif-placeholder {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 </style>
