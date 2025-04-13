@@ -17,6 +17,7 @@
 
 <script setup>
 import DiscussionList from "/src/components/DiscussionList.vue";
+import { onMounted } from "vue";
 
 import getUser from "@/composables/getUser";
 import Presentation from "@/components/Presentation.vue";
