@@ -7,18 +7,34 @@
     <br>
     <textarea v-model="discussion.contenu" placeholder="Contenu" required class="form-textarea"></textarea>
     <br>
+    <select v-if="notSelected" multiple>
+      <option disabled value="">Select your category</option>
+      <option @click="addCategory">Add a new category</option>
+      <option v-for="category in categories" :key="category.id" @click="discussion.category = category; notSelected = false" :value="category.name">
+        {{ category.name }}
+      </option>
+    </select>
+    <p v-else>
+      <strong>Selected Category:</strong> {{ discussion.category.name }}
+      <button @click="notSelected = true">Change Category</button>
+    </p>
     <button @click.prevent="addDiscussion" class="submit-button">Submit</button>
   </form>
 </template>
 
 <script setup>
+import { ref, inject, onMounted } from 'vue';
+import { collection, getDocs, addDoc } from "firebase/firestore";
+import { db } from "/src/firebase";
 import router from '@/router';
-import { ref, inject } from 'vue';
+
 
 const userInfo = inject('userDoc'); 
 const emit = defineEmits(["discussionAdded"]);
 
 const addForm = ref(false);
+const categories = ref([])
+let notSelected = ref(true);
 const discussion = ref({
   titre: "",
   contenu: "",
@@ -27,10 +43,33 @@ const discussion = ref({
   authorPDP: "",
   upvoters: [],
   downvoters: [],
-  categories: [],
+  category: {
+    name: "",
+    id: "",
+  },
   edited: false,
   date: new Date()
 });
+
+async function fetchCategories() {
+  const query = await getDocs(collection(db, "categories"));
+  categories.value = query.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}
+onMounted(() => {
+  fetchCategories();
+});
+
+function addCategory() {
+  const newCategory = prompt("Enter the name of the new category:");
+  if (newCategory) {
+    addDoc(collection(db, "categories"), { name: newCategory });
+    fetchCategories();
+  }
+}
+
 
 function addDiscussion() {
   if (!discussion.value.titre || !discussion.value.contenu) {
