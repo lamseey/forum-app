@@ -31,6 +31,7 @@
         <small class="fw-semibold">{{ discussion.authorName }}</small>
       </div>
       <small class="text-muted">{{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</small>
+
     </div>
 
     <!-- Edit Mode -->
@@ -64,6 +65,7 @@
     </div>
 
 
+
     <!-- Voting -->
     <div class="d-flex align-items-center gap-3">
       <button 
@@ -84,6 +86,7 @@
 
     <!-- Responses -->
     <ResponseList v-if="discussion?.id" :discussionId="discussion.id" />
+
   </div>
 </template>
 

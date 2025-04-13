@@ -1,7 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg px-4 py-2 shadow" style="background-color: #2e7d32;">
     <div class="container-fluid d-flex justify-content-between align-items-center">
-
       <!-- Logo qui redirige vers le HOME -->
       <router-link class="navbar-brand d-flex align-items-center text-white fw-bold fs-4 me-4" to="/">
         <img src="https://i.postimg.cc/XvNcyxhR/Logo-Sqwak.png" alt="logo" width="40" class="me-2">
@@ -9,8 +8,8 @@
       </router-link>
 
       <!-- Barre de Recherche -->
-      <form class="d-flex flex-grow-1 mx-4" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search Squaks..." aria-label="Search">
+      <form @submit.prevent="searchDiscussion" class="d-flex flex-grow-1 mx-4" role="search">
+        <input v-model="search" @keyup.enter="searchDiscussion" class="form-control me-2" type="search" placeholder="Search Squaks..." aria-label="Search">
         <button class="btn btn-light" type="submit">Search</button>
       </form>
 
@@ -61,20 +60,29 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import { signOut } from "firebase/auth"
 import { auth } from "@/firebase"
-import router from "@/router"
+import { useRouter } from 'vue-router'
 
+const search = ref("");
 const logged_in = inject('logged_in')
-const userInfo = inject('userDoc')
+const userInfo = inject('userDoc');
+const router = useRouter();
 const logout = async () => {
   try {
     await signOut(auth)
     console.log("Logged out successfully")
-    router.push("/")
+    await router.push("/")
   } catch (err) {
     console.log("Error while logging out:", err)
+  }
+}
+
+const searchDiscussion = () => {
+  if (search.value) {
+    console.log('/search/' + search.value);
+    router.push('/search/' + search.value);
   }
 }
 </script>
