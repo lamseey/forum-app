@@ -17,10 +17,8 @@
       <h2 class="discussion-title">{{ discussion.titre }}</h2>
       <p class="discussion-content">{{ discussion.contenu }}</p>
     </div>
-      <p><strong>Categories:</strong></p>
-      <ul>
-        <li v-for="category in discussion.categories" :key="category">{{ category }}</li>
-      </ul>
+      <span><strong>Category</strong></span>
+      <router-link :to="'/category/' + discussion.category.id" v-if="discussion.category">{{discussion.category.name}}</router-link><br>
 
     <span v-if="discussion.edited">Edited </span>
       <span class="discussion-date"><strong>Date:</strong> {{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</span>

@@ -1,4 +1,5 @@
 <template>
+
     <section class="presentation-container text-center" ref="presentationSection">
       <div class="content">
         <img src="https://i.postimg.cc/XvNcyxhR/Logo-Sqwak.png" alt="Sqwak Logo" class="logo mb-3" />
@@ -60,4 +61,4 @@
     transform: scale(1.05);
   }
   </style>
-  
+

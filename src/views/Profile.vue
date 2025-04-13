@@ -8,7 +8,13 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
 
-const userInfo = inject('userDoc')
+
+defineProps({
+  userID: {
+    type: String,
+    required: true
+  }
+});
+
 </script>
