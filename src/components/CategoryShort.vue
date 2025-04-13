@@ -4,7 +4,7 @@
     <!-- Category List -->
     <div v-if="categories.length > 0">
       <ul class="list-group">
-        <li v-for="category in categories" :key="category.id" class="list-group-item">
+        <li v-for="category in categories.slice(0, 3)" :key="category.id" class="list-group-item">
           <router-link :to="'/category/' + category.id" class="text-decoration-none">
             {{ category.name }}
           </router-link>

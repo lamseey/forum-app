@@ -18,10 +18,10 @@
     <!-- Author Info -->
     <div class="account mb-3 d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
-        <img :src="discussion.authorPDP" alt="author profile picture" class="rounded-circle me-3" width="50" height="50"/>
+        <img :src="discussion.authorPDP" alt="" class="rounded-circle me-3" width="50" height="50"/>
         <p class="mb-0">{{ discussion.authorName }}</p>
       </div>
-      <span class="text-muted">{{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</span>
+      <span class="text-muted">{{ new Date(discussion.date).toLocaleString() }}</span>
     </div>
 
     <!-- Edit Form -->
@@ -61,7 +61,6 @@
         </span>
       </div>
     </div>
-
     <ResponseList :discussionId="discussion.id" />
   </div>
   

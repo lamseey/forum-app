@@ -1,9 +1,25 @@
 <template>
   <div class="discussion-list">
-    <NewDiscussionForm @discussion-added="addDiscussion" />
+    <NewDiscussionForm :categoryID="categoryID" @discussion-added="addDiscussion" />
+    <div v-if="discussions.length === 0" class="no-discussions">
+      <p>No discussions available.</p>
+    </div>
+    <span>Filter by: </span>
+    <select>
+      <option disabled value=""> Select a category</option>
+      <option @click="categoryID = undefined">All</option>
+      <option v-for="category in categories" :key="category.id" @click="categoryID = category.id">
+        {{ category.name }}
+      </option>
+    </select>
     <div v-for="discussion in discussions" :key="discussion.id" class="discussion-item">
       <div v-if="categoryID">
         <div v-if="discussion.category.id === categoryID">
+          <DiscussionItem @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
+        </div>
+      </div>
+      <div v-else-if="search">
+        <div v-if="discussion.titre.toLowerCase().includes(search.toLowerCase()) || discussion.contenu.toLowerCase().includes(search.toLowerCase())">
           <DiscussionItem @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
         </div>
       </div>
@@ -22,8 +38,20 @@ import DiscussionItem from "@/components/DiscussionItem.vue";
 import NewDiscussionForm from "@/components/NewDiscussionForm.vue";
 const discussions = ref([]);
 
+const categories = ref([]);
+async function fetchCategories() {
+  const query = await getDocs(collection(db, "categories"));
+  categories.value = query.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+}
+
 const props = defineProps({
   categoryID: {
+    type: String,
+  },
+  search: {
     type: String,
   }
 });
@@ -50,6 +78,7 @@ function addDiscussion(discussion) {
 
 onMounted(() => {
   fetchDiscussions();
+  fetchCategories();
 })
 </script>
 

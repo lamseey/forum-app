@@ -1,5 +1,5 @@
 <template>
-  <button @click="addForm = !addForm" class="toggle-button">
+  <button @click="openForm" class="toggle-button">
     {{ addForm ? "Cancel" : "Add Discussion" }}
   </button>
   <form v-if="addForm" class="discussion-form">
@@ -42,6 +42,14 @@ import router from '@/router';
 
 const userInfo = inject('userDoc'); 
 const emit = defineEmits(["discussionAdded"]);
+const props = defineProps(
+  {
+    categoryID: {
+      type: String,
+      required: false
+    }
+  }
+)
 
 const addForm = ref(false);
 const categories = ref([])
@@ -64,6 +72,13 @@ const discussion = ref({
   edited: false,
   date: new Date()
 });
+
+function openForm() {
+  addForm.value = !addForm.value; notSelected.value = !(props.categoryID);
+  if (props.categoryID) {
+    discussion.value.category = categories.value.find(category => category.id === props.categoryID);
+  }
+}
 
 function addSubCategory() {
   const newSubCategory = prompt("Enter the name of the new subcategory:");

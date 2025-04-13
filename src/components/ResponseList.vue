@@ -2,21 +2,23 @@
   <div class="response-list">
     <!-- New Response Form -->
     <NewResponseForm :discussion-id="discussionId" @response-added="addResponse" />
-
-    <!-- Responses List -->
-    <ul class="list-group mt-3">
-      <li v-for="response in responses" :key="response.id" class="list-group-item border rounded-3 mb-3">
-        <!-- Response Item -->
-        <ResponseItem 
-          @response-edited="fetchResponses" 
-          @response-deleted="fetchResponses" 
-          :response="response" 
-        />
-        
-        <!-- Nested Responses List (if any) -->
-        <ResponseList :discussion-id="response.id" />
-      </li>
-    </ul>
+    <button v-if="responses.length > 0" @click="showResponses = !showResponses" class="btn btn-link">
+          <i class="bi bi-chat-left-text"></i> {{ showResponses ? "Hide Responses" : "Show Responses" }}
+        </button>
+    <div v-if="showResponses" class="response-list-items">
+      <!-- Responses List -->
+      <ul class="list-group mt-3">
+        <li v-for="response in responses" :key="response.id" class="list-group-item border rounded-3 mb-3">
+          <!-- Response Item -->
+          <ResponseItem
+            @response-edited="fetchResponses"
+            @response-deleted="fetchResponses"
+            :response="response"
+          />
+          <ResponseList :discussion-id="response.id" />
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -35,6 +37,7 @@ const props = defineProps({
 });
 
 let responses = ref([]);
+let showResponses = ref(false);
 
 // Watch for changes in discussionId and fetch responses accordingly
 watch(() => props.discussionId, async () => {
