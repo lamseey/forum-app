@@ -1,7 +1,7 @@
 <template>
   <div v-if="discussion" class="discussion-item">
-    <button @click="DeleteDiscussion(discussion.id)"> Delete </button>
-    <button @click="editing = !editing"> {{(editing) ? "Cancel" : "Edit" }} </button>
+    <button v-if="user != null && (user.uid == discussion.authorId || user.role == 'moderator')"  @click="DeleteDiscussion(discussion.id)"> Delete </button>
+    <button v-if="user != null && user.uid == discussion.authorId" @click="editing = !editing"> {{(editing) ? "Cancel" : "Edit" }} </button>
     <router-link v-if="inHome" :to="'/discussion/' + discussion.id"> View Details</router-link>
     <div class="account">
         <img :src="discussion.authorPDP" alt="">

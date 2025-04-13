@@ -11,6 +11,7 @@
   </div>
 </template>
 <script setup>
+import router from '@/router';
 import { ref, defineProps, inject } from 'vue';
 
 const userInfo = inject('userDoc')
@@ -41,7 +42,9 @@ function addResponse() {
     return;
   }
   if (!userInfo.value) {
-    alert("You need to login or create an account first");
+    if (confirm("You need to login or create an account first")) {
+      router.push("/login");
+    }
     return;
   }
   response.value.authorName = userInfo.value.username;

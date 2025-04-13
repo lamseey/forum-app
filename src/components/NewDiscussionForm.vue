@@ -26,6 +26,8 @@
 import { ref, inject, onMounted } from 'vue';
 import { collection, getDocs, addDoc } from "firebase/firestore";
 import { db } from "/src/firebase";
+import router from '@/router';
+
 
 const userInfo = inject('userDoc'); 
 const emit = defineEmits(["discussionAdded"]);
@@ -76,7 +78,9 @@ function addDiscussion() {
   }
 
   if (!userInfo?.value) {
-    alert("You need to login or create an account first");
+    if (confirm("You need to login or create an account first")) {
+      router.push("/login");
+    }
     return;
   }
 

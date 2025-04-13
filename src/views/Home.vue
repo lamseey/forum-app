@@ -16,12 +16,13 @@
 </style>
 
 <script setup>
-import { onMounted } from "vue";
 import DiscussionList from "/src/components/DiscussionList.vue";
+
 import getUser from "@/composables/getUser";
 import Presentation from "@/components/Presentation.vue";
 import CategoryShort from "@/components/CategoryShort.vue";
 onMounted(() => {
   getUser();
 });
+
 </script>
