@@ -18,21 +18,22 @@ async function fetchCategories() {
       })
   );
 }
+
 </script>
 
 <template>
   <div>
-    <h1 v-if="categories.length > 0">{{categories[0]}}</h1>
+    <router-link :to="'/category/' + categories[0].id" v-if="categories.length > 0">{{categories[0].name}}</router-link>
   </div>
   <div>
-    <h1 v-if="categories.length > 1">{{categories[1]}}</h1>
+    <router-link :to="'/category/' + categories[1].id" v-if="categories.length > 1">{{categories[1].name}}</router-link>
   </div>
   <div>
-    <h1 v-if="categories.length > 2">{{categories[2]}}</h1>
+    <router-link :to="'/category/' + categories[2].id" v-if="categories.length > 2">{{categories[2].name}}</router-link>
   </div>
-  <button @click="showMoreCategories">
-    Show more categories
-  </button>
+  <router-link to="/categorylist">
+    <h1 v-if="categories.length > 3">Show more categories</h1>
+  </router-link>
 </template>
 
 <style scoped>

@@ -2,7 +2,14 @@
   <div class="discussion-list">
     <NewDiscussionForm @discussion-added="addDiscussion" />
     <div v-for="discussion in discussions" :key="discussion.id" class="discussion-item">
-      <DiscussionItem @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
+      <div v-if="categoryID">
+        <div v-if="discussion.category.id === categoryID">
+          <DiscussionItem @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
+        </div>
+      </div>
+      <div v-else>
+        <DiscussionItem @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
+      </div>
     </div>
   </div>
 </template>
@@ -14,6 +21,12 @@ import { db } from "/src/firebase";
 import DiscussionItem from "@/components/DiscussionItem.vue";
 import NewDiscussionForm from "@/components/NewDiscussionForm.vue";
 const discussions = ref([]);
+
+const props = defineProps({
+  categoryID: {
+    type: String,
+  }
+});
 
 
 async function fetchDiscussions() {

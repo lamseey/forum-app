@@ -7,13 +7,17 @@
     <br>
     <textarea v-model="discussion.contenu" placeholder="Contenu" required class="form-textarea"></textarea>
     <br>
-    <select v-if="notSelected" v-model="discussion.categories" multiple>
+    <select v-if="notSelected" multiple>
       <option disabled value="">Select your category</option>
       <option @click="addCategory">Add a new category</option>
-      <option v-for="category in categories" :key="category.id" @click="discussion.category = category" :value="category.name">
+      <option v-for="category in categories" :key="category.id" @click="discussion.category = category; notSelected = false" :value="category.name">
         {{ category.name }}
       </option>
     </select>
+    <p v-else>
+      <strong>Selected Category:</strong> {{ discussion.category.name }}
+      <button @click="notSelected = true">Change Category</button>
+    </p>
     <button @click.prevent="addDiscussion" class="submit-button">Submit</button>
   </form>
 </template>
@@ -39,7 +43,7 @@ const discussion = ref({
   downvoters: [],
   category: {
     name: "",
-    id: ""
+    id: "",
   },
   edited: false,
   date: new Date()

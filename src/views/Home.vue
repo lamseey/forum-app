@@ -1,5 +1,6 @@
 <template>
   <Presentation/>
+  <CategoryShort/>
   <DiscussionList></DiscussionList>
 </template>
 
