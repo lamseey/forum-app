@@ -19,6 +19,8 @@
     </div>
       <span><strong>Category</strong></span>
       <router-link :to="'/category/' + discussion.category.id" v-if="discussion.category">{{discussion.category.name}}</router-link><br>
+      <span><strong>Subcategory</strong></span>
+    <p>{{discussion.subcategory}}</p>
 
     <span v-if="discussion.edited">Edited </span>
       <span class="discussion-date"><strong>Date:</strong> {{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</span>
