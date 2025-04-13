@@ -102,11 +102,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
-
-.discussion-item:hover {
-  background-color: #f1f1f1;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: white;
 }
 
 </style>
