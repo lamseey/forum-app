@@ -46,6 +46,7 @@ function addResponse() {
   }
   response.value.authorName = userInfo.value.username;
   response.value.authorPDP = userInfo.value.pdp;
+  response.value.authorId = userInfo.value.uid;
   emit("responseAdded", response.value);
   addForm.value = false;
   response.value = {
@@ -55,7 +56,8 @@ function addResponse() {
     downvote: [],
     discussionId: props.discussionId,
     authorName: "",
-    authorPDP: ""
+    authorPDP: "",
+    authorId: "",
   };
 }
 
