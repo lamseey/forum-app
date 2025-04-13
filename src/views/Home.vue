@@ -1,5 +1,5 @@
 <template>
-  <h1 id="homepage">HOME PAGE</h1>
+  <Presentation></Presentation>
   <DiscussionList></DiscussionList>
 </template>
 
@@ -15,10 +15,6 @@
 </style>
 
 <script setup>
-import { onMounted } from "vue";
 import DiscussionList from "/src/components/DiscussionList.vue";
-import getUser from "@/composables/getUser";
-onMounted(() => {
-  getUser();
-});
+import Presentation from "@/components/Presentation.vue";
 </script>
