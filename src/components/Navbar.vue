@@ -85,28 +85,53 @@ const logout = async () => {
   border-radius: 0 0 8px 8px;
 }
 
-.btn-brown {
-  background-color: #915039;
-  color: white;
-  border: none;
-}
-.btn-brown:hover {
-  background-color: #9c5d46;
-  transform: scale(1.05);
-}
-
+/* Logo image */
 .navbar-brand img {
   border-radius: 50%;
 }
 
-button, .btn {
-  transition: transform 0.2s ease;
+/* Dropdown tweaks */
+.dropdown-toggle {
+  background-color: transparent;
+  padding: 6px 12px;
+  border-radius: 7px;
+  transition: all 0.2s ease;
 }
 
-.dropdown-toggle::after {
-  display: none; /* optional: hide arrow if you don't like it */
+
+.dropdown-menu {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+  padding: 10px 0;
 }
 
+.dropdown-item {
+  font-weight: 500;
+  padding: 10px 20px;
+  color: #333;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-item.text-danger {
+  color: #d9534f;
+}
+
+.dropdown-item.text-danger:hover {
+  background-color: #fbeaea;
+}
+
+/* PDP image */
+.dropdown-toggle img {
+  border: 2px solid white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Notification icon */
 .notif-placeholder {
   width: 42px;
   height: 42px;
@@ -115,4 +140,11 @@ button, .btn {
   justify-content: center;
 }
 
+button, .btn {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
 </style>
