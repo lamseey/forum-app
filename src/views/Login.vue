@@ -1,25 +1,38 @@
 <template>
-    <h1>Login to your Account</h1>
-    <div class="register-container">
-        <div class="register-grid">
-        <label>Email : </label>
-        <input type="email" placeholder="Email" v-model="email" />
-        <label>Password : </label>
-        <input type="password" placeholder="Password" v-model="password" />
-        </div>
+  <h1 class="main-title text-center">Login to your Account</h1>
+  <div class="login-container">
+    <form @submit.prevent="login" class="bg-light p-4 rounded shadow-sm">
+      <div class="mb-3">
+        <label for="email" class="form-label text-brown">Email :</label>
+        <input type="email" id="email" placeholder="Email" v-model="email" class="form-control" />
+      </div>
 
-        <!-- Forgot Password -->
-        <a href="#" @click.prevent="forgotPassword" style="align-self: flex-start; margin-left: 30%;">
-        Forgot Password?
-        </a>
+      <div class="mb-3">
+        <label for="password" class="form-label text-brown">Password :</label>
+        <input type="password" id="password" placeholder="Password" v-model="password" class="form-control" />
+      </div>
 
-        <button @click="login">Login</button>
-        <p v-if="error" style="color: red;">{{ error }}</p>
-        <p v-if="successMessage" style="color: green;">{{ successMessage }}</p>
-    </div>
+      <div class="mb-3 text-end">
+        <a href="#" @click.prevent="forgotPassword" class="text-decoration-none text-brown small">Forgot Password?</a>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-success w-100">Login</button>
+      </div>
+
+      <p v-if="error" class="text-danger text-center mt-3">{{ error }}</p>
+      <p v-if="successMessage" class="text-success text-center mt-3">{{ successMessage }}</p>
+
+      <hr />
+
+      <p class="text-center mt-3 mb-0 text-brown">Don’t have an account?</p>
+      <div class="text-center">
+        <router-link to="/register" class="btn btn-outline-success mt-2">Register</router-link>
+      </div>
+    </form>
+  </div>
 </template>
   
-
 
 <script setup>
 import { ref } from 'vue'
@@ -64,18 +77,70 @@ const forgotPassword = async () => {
 
 
 <style scoped>
-.register-container {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 20px;
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  padding-bottom: 40px;
+  min-height: 100vh;
+  background-color: #f2f7f3; /* light green background */
 }
 
-.register-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    width: 40%;
-    text-align: left;
-    row-gap: 10px;
+form {
+  width: 100%;
+  max-width: 500px;
 }
+
+.main-title {
+  color: #4CAF50; /* duck green */
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 40px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.main-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: #8B4513; /* duck brown */
+  margin: 10px auto 0 auto;
+  border-radius: 2px;
+}
+
+.text-brown {
+  color: #8B4513;
+}
+
+.bg-light {
+  background-color: #f9f9f9;
+}
+
+.form-control {
+  border: 1px solid #8B4513;
+}
+
+.btn-success {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.btn-success:hover {
+  background-color: #45a049;
+}
+
+.btn-outline-success {
+  color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.btn-outline-success:hover {
+  background-color: #4CAF50;
+  color: white;
+}
+
 </style>

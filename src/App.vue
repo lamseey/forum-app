@@ -48,6 +48,9 @@ watch(user, async (newUser) => {
     font-family: Arial, sans-serif;
     font-size: 105%;
   }
+  body {
+    background-color: #f2f7f3; /* light green background */
+  }
   nav {
     background-color: #333;
     color: white;
