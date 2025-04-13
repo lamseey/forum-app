@@ -50,8 +50,8 @@
     <!-- Tags Section -->
     <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
       <div v-if="discussion.category">
-        <router-link 
-          :to="'/category/' + discussion.category.id" 
+        <router-link
+          :to="'/category/' + discussion.category.id"
           class="badge bg-success text-decoration-none"
           title="Category">
           <i class="bi bi-folder-fill me-1"></i> {{ discussion.category.name }}
@@ -68,16 +68,16 @@
 
     <!-- Voting -->
     <div class="d-flex align-items-center gap-3">
-      <button 
-        class="btn btn-sm p-0 border-0 bg-transparent" 
-        :disabled="discussion.upvoters?.includes(user?.value?.uid)" 
+      <button
+        class="btn btn-sm p-0 border-0 bg-transparent"
+        :disabled="discussion.upvoters?.includes(user?.value?.uid)"
         @click="upvote">
         <i class="bi bi-arrow-up-circle-fill text-success"></i>
       </button>
       <small>{{ upvoter_num }}</small>
-      <button 
-        class="btn btn-sm p-0 border-0 bg-transparent" 
-        :disabled="discussion.downvoters?.includes(user?.value?.uid)" 
+      <button
+        class="btn btn-sm p-0 border-0 bg-transparent"
+        :disabled="discussion.downvoters?.includes(user?.value?.uid)"
         @click="downvote">
         <i class="bi bi-arrow-down-circle-fill text-danger"></i>
       </button>
@@ -98,7 +98,7 @@ import ResponseList from "@/components/ResponseList.vue";
 import { useRoute, useRouter } from "vue-router";
 import getUser from "@/composables/getUser";
 
-const { user } = getUser(); 
+const { user } = getUser();
 const userInfo = inject('userInfo')
 const discussion = ref({});
 const emit = defineEmits(["discussionDeleted"]);
