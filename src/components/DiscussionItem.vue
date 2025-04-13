@@ -21,7 +21,7 @@
         <img :src="discussion.authorPDP" alt="" class="rounded-circle me-3" width="50" height="50"/>
         <p class="mb-0">{{ discussion.authorName }}</p>
       </div>
-      <span class="text-muted">{{ new Date(discussion.date).toLocaleString() }}</span>
+      <span class="text-muted">{{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</span>
     </div>
 
     <!-- Edit Form -->
