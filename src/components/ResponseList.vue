@@ -5,12 +5,12 @@
     <button v-if="responses.length > 0" @click="showResponses = !showResponses" class="btn btn-link">
           <i class="bi bi-chat-left-text"></i> {{ showResponses ? "Hide Responses" : "Show Responses" }}
         </button>
-    <div v-if="showResponses" class="response-list-items">
+    <div v-if="showResponses" class="responses">
       <!-- Responses List -->
-      <ul class="list-group mt-3">
-        <li v-for="response in responses" :key="response.id" class="list-group-item border rounded-3 mb-3">
+      <ul class=" mt-3">
+        <li v-for="response in responses" :key="response.id" class="list-group-item mb-3">
           <!-- Response Item -->
-          <ResponseItem
+        <ResponseItem
             @response-edited="fetchResponses"
             @response-deleted="fetchResponses"
             :response="response"
