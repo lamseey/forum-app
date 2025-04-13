@@ -44,6 +44,8 @@
           {{ discussion.category.name }}
         </router-link>
       </span>
+      <span><strong>Subcategory</strong></span>
+    <p>{{discussion.subcategory}}</p>
     </div>
 
     <!-- Upvote and Downvote Section with Icons -->
@@ -62,6 +64,16 @@
 
     <!-- Responses Section -->
     <ResponseList :discussionId="discussion.id" />
+      <span><strong>Category</strong></span>
+      <router-link :to="'/category/' + discussion.category.id" v-if="discussion.category">{{discussion.category.name}}</router-link><br>
+      <span><strong>Subcategory</strong></span>
+    <p>{{discussion.subcategory}}</p>
+
+    <span v-if="discussion.edited">Edited </span>
+      <span class="discussion-date"><strong>Date:</strong> {{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</span>
+      <p class="discussion-upvote"><strong>Upvotes:</strong> {{ discussion.upvote?.size || 0 }}</p>
+      <p class="discussion-downvote"><strong>Downvotes:</strong> {{ discussion.downvote?.size || 0 }}</p>
+      <ResponseList :discussionId="discussion.id" />
   </div>
 </template>
 

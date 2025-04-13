@@ -18,13 +18,24 @@
       <strong>Selected Category:</strong> {{ discussion.category.name }}
       <button @click="notSelected = true">Change Category</button>
     </p>
+    <select v-if='notSelected2 && discussion.category.name!=="" ' multiple>
+      <option disabled value="">Select your category</option>
+      <option @click="addSubCategory">Add a new subcategory</option>
+      <option v-for="subcategory in discussion.category.subcategories" :key="subcategory.id" @click="discussion.category.subcategories.push(subcategory); notSelected2 = false" :value="subcategory.name">
+        {{ subcategory.name }}
+      </option>
+    </select>
+    <p v-else>
+      <strong>Selected Subcategory:</strong> {{ discussion.subcategory }}
+      <button @click="notSelected2 = true">Change SubCategory</button>
+    </p>
     <button @click.prevent="addDiscussion" class="submit-button">Submit</button>
   </form>
 </template>
 
 <script setup>
 import { ref, inject, onMounted } from 'vue';
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, doc } from "firebase/firestore";
 import { db } from "/src/firebase";
 import router from '@/router';
 
@@ -35,6 +46,7 @@ const emit = defineEmits(["discussionAdded"]);
 const addForm = ref(false);
 const categories = ref([])
 let notSelected = ref(true);
+let notSelected2 = ref(true);
 const discussion = ref({
   titre: "",
   contenu: "",
@@ -46,10 +58,27 @@ const discussion = ref({
   category: {
     name: "",
     id: "",
+    subcategories: []
   },
+  subcategory: "",
   edited: false,
   date: new Date()
 });
+
+function addSubCategory() {
+  const newSubCategory = prompt("Enter the name of the new subcategory:");
+  if (newSubCategory && categories.value.indexOf(newSubCategory) === -1) {
+    discussion.value.category.subcategories.push({ name: newSubCategory });
+    discussion.value.subcategory = newSubCategory;
+    updateDoc(doc(db, "categories", discussion.value.category.id), {
+      subcategories: discussion.value.category.subcategories
+    });
+    fetchCategories();
+  }
+  else{
+    alert("Subcategory already exists or invalid name");
+  }
+}
 
 async function fetchCategories() {
   const query = await getDocs(collection(db, "categories"));
@@ -65,7 +94,7 @@ onMounted(() => {
 function addCategory() {
   const newCategory = prompt("Enter the name of the new category:");
   if (newCategory) {
-    addDoc(collection(db, "categories"), { name: newCategory });
+    addDoc(collection(db, "categories"), { name: newCategory, subcategories: [] });
     fetchCategories();
   }
 }
