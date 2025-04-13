@@ -50,6 +50,7 @@ function UpdateResponse(id) {
   editing.value = false;
   const updatedResponse= {... props.response};
   updatedResponse.date = new Date();
+  updatedResponse.edited = true;
   updateDoc(doc(db, "responses", id), updatedResponse);
   emit("responseEdited", id)
 }
