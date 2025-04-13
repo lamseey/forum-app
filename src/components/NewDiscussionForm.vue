@@ -12,6 +12,7 @@
 </template>
 
 <script setup>
+import router from '@/router';
 import { ref, inject } from 'vue';
 
 const userInfo = inject('userDoc'); 
@@ -38,7 +39,9 @@ function addDiscussion() {
   }
 
   if (!userInfo?.value) {
-    alert("You need to login or create an account first");
+    if (confirm("You need to login or create an account first")) {
+      router.push("/login");
+    }
     return;
   }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="response-item">
-    <button @click="DeleteResponse(response.id)"> Delete </button>
-    <button @click="editing = !editing"> {{(editing) ? "Cancel" : "Edit" }} </button>
+    <button v-if="user != null && (user.uid == response.authorId || user.role =='moderator')" @click="DeleteResponse(response.id)"> Delete </button>
+    <button v-if="user != null && user.uid == response.authorId" @click="editing = !editing"> {{(editing) ? "Cancel" : "Edit" }} </button>
     <div class="account">
         <img :src="response.authorPDP" alt="">
         <p>{{ response.authorName }}</p>
@@ -23,10 +23,11 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import { defineProps, inject, ref } from "vue";
 import {collection, deleteDoc, doc, getDocs, updateDoc} from "firebase/firestore";
 import {db} from "@/firebase";
 
+const user = inject("userDoc");
 const emit = defineEmits(["responseDeleted", "responseEdited"])
 
 let props = defineProps({
