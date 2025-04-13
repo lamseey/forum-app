@@ -8,24 +8,12 @@
     <select>
       <option disabled value=""> Select a category</option>
       <option @click="categoryID = undefined">All</option>
-      <option v-for="category in categories" :key="category.id" @click="categoryID = category.id">
+      <option v-for="category in categories" :key="category.id" @click="categoryID = category.id; fetchDiscussions()">
         {{ category.name }}
       </option>
     </select>
     <div v-for="discussion in discussions" :key="discussion.id" class="discussion-item">
-      <div v-if="categoryID">
-        <div v-if="discussion.category.id === categoryID">
-          <DiscussionItem @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
-        </div>
-      </div>
-      <div v-else-if="search">
-        <div v-if="discussion.titre.toLowerCase().includes(search.toLowerCase()) || discussion.contenu.toLowerCase().includes(search.toLowerCase())">
-          <DiscussionItem @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
-        </div>
-      </div>
-      <div v-else>
-        <DiscussionItem @discussion-deleted="fetchDiscussions" :discussionId="discussion.id" />
-      </div>
+      <DiscussionItem :discussion-id="discussion.id" :discussion="discussion" @discussion-deleted="fetchDiscussions" />
     </div>
   </div>
 </template>
@@ -63,6 +51,12 @@ async function fetchDiscussions() {
       id: doc.id,
       ...doc.data(),
     }));
+    if (props.categoryID) {
+      discussions.value = discussions.value.filter(discussion => discussion.category.id === props.categoryID);
+    }
+    if (props.search) {
+      discussions.value = discussions.value.filter(discussion => discussion.titre.toLowerCase().includes(props.search.toLowerCase()));
+    }
 
 }
 

@@ -8,9 +8,9 @@
       </router-link>
 
       <!-- Barre de Recherche -->
-      <form class="d-flex flex-grow-1 mx-4" role="search">
+      <form @submit.prevent="searchDiscussion" class="d-flex flex-grow-1 mx-4" role="search">
         <input v-model="search" @keyup.enter="searchDiscussion" class="form-control me-2" type="search" placeholder="Search Squaks..." aria-label="Search">
-        <button class="btn btn-light" @keyup.enter="searchDiscussion" type="submit">Search</button>
+        <button class="btn btn-light" type="submit">Search</button>
       </form>
 
       <!-- User / Guest section -->
@@ -63,16 +63,17 @@
 import { inject, ref } from 'vue'
 import { signOut } from "firebase/auth"
 import { auth } from "@/firebase"
-import router from "@/router"
+import { useRouter } from 'vue-router'
 
 const search = ref("");
 const logged_in = inject('logged_in')
-const userInfo = inject('userDoc')
+const userInfo = inject('userDoc');
+const router = useRouter();
 const logout = async () => {
   try {
     await signOut(auth)
     console.log("Logged out successfully")
-    router.push("/")
+    await router.push("/")
   } catch (err) {
     console.log("Error while logging out:", err)
   }
@@ -80,7 +81,8 @@ const logout = async () => {
 
 const searchDiscussion = () => {
   if (search.value) {
-    router.push({ path: '/search', query: { q: search.value } })
+    console.log('/search/' + search.value);
+    router.push('/search/' + search.value);
   }
 }
 </script>

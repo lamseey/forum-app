@@ -10,10 +10,6 @@ const search = ref(route.params.search);
 
 <template>
   <h1>Search PAGE</h1>
-  <div class="search">
-    <input type="text" placeholder="Search..." />
-    <button>Search</button>
-  </div>
   <DiscussionList :search="search"/>
 </template>
 
