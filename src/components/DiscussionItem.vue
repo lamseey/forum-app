@@ -23,6 +23,8 @@
       class="btn btn-outline-success btn-sm mb-2 w-fit-content">
       <i class="bi bi-eye"></i> View
     </router-link>
+    <button @click="report">Report Message</button>
+
 
     <!-- Author Info -->
     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -65,7 +67,6 @@
     </div>
 
 
-
     <!-- Voting -->
     <div class="d-flex align-items-center gap-3">
       <button
@@ -101,7 +102,7 @@ import getUser from "@/composables/getUser";
 const { user } = getUser();
 const userInfo = inject('userInfo')
 const discussion = ref({});
-const emit = defineEmits(["discussionDeleted"]);
+const emit = defineEmits(["discussionDeleted", "reportDiscussion"]);
 const router = useRouter();
 
 const props = defineProps({
@@ -110,6 +111,22 @@ const props = defineProps({
     required: true
   }
 });
+
+function report(){
+  const message = prompt("Why do you want to report this message?");
+  if (message) {
+    const report = {
+    message: message,
+    discussionId: props.discussionId,
+    userId: user.value.uid,
+    date: new Date()
+  };
+    emit("reportDiscussion", report);
+    alert("Your message has been sent to the moderators");
+  } else {
+    alert("Please fill in all fields");
+  }
+}
 
 const route = useRoute();
 const inHome = ref(route.path === "/");
