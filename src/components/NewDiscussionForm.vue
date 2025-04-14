@@ -1,36 +1,61 @@
 <template>
-  <button @click="openForm" class="toggle-button">
-    {{ addForm ? "Cancel" : "Add Discussion" }}
-  </button>
-  <form v-if="addForm" class="discussion-form">
-    <input v-model="discussion.titre" placeholder="Titre" required class="form-input">
-    <br>
-    <textarea v-model="discussion.contenu" placeholder="Contenu" required class="form-textarea"></textarea>
-    <br>
-    <select v-if="notSelected" multiple>
-      <option disabled value="">Select your category</option>
-      <option @click="addCategory">Add a new category</option>
-      <option v-for="category in categories" :key="category.id" @click="discussion.category = category; notSelected = false" :value="category.name">
-        {{ category.name }}
-      </option>
-    </select>
-    <p v-else>
-      <strong>Selected Category:</strong> {{ discussion.category.name }}
-      <button @click="notSelected = true">Change Category</button>
-    </p>
-    <select v-if='notSelected2 && discussion.category.name!=="" ' multiple>
-      <option disabled value="">Select your category</option>
-      <option @click="addSubCategory">Add a new subcategory</option>
-      <option v-for="subcategory in discussion.category.subcategories" :key="subcategory.id" @click="discussion.category.subcategories.push(subcategory); notSelected2 = false" :value="subcategory.name">
-        {{ subcategory.name }}
-      </option>
-    </select>
-    <p v-else>
-      <strong>Selected Subcategory:</strong> {{ discussion.subcategory }}
-      <button @click="notSelected2 = true">Change SubCategory</button>
-    </p>
-    <button @click.prevent="addDiscussion" class="submit-button">Submit</button>
-  </form>
+  <div class="container mt-4">
+    <button @click="openForm" class="btn btn-primary mb-3">
+      {{ addForm ? "Cancel" : "Add Discussion" }}
+    </button>
+
+    <form v-if="addForm" class="card p-4 mb-4">
+      <div class="mb-3">
+        <input v-model="discussion.titre" placeholder="Titre" required class="form-control">
+      </div>
+
+      <div class="mb-3">
+        <textarea v-model="discussion.contenu" placeholder="Contenu" required class="form-control" rows="5"></textarea>
+      </div>
+
+      <div class="mb-3">
+        <div v-if="notSelected" class="card p-3">
+          <label class="form-label">Select category</label>
+          <select class="form-select" multiple>
+            <option disabled value="">Select your category</option>
+            <option @click="addCategory">Add a new category</option>
+            <option v-for="category in categories"
+                    :key="category.id"
+                    @click="discussion.category = category; notSelected = false"
+                    :value="category.name">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        <div v-else class="card p-3">
+          <p class="mb-2"><strong>Selected Category:</strong> {{ discussion.category.name }}</p>
+          <button @click="notSelected = true" class="btn btn-sm btn-outline-secondary">Change Category</button>
+        </div>
+      </div>
+
+      <div class="mb-3" v-if="discussion.category.name">
+        <div v-if="notSelected2" class="card p-3">
+          <label class="form-label">Select subcategory</label>
+          <select class="form-select" multiple>
+            <option disabled value="">Select your subcategory</option>
+            <option @click="addSubCategory">Add a new subcategory</option>
+            <option v-for="subcategory in discussion.category.subcategories"
+                    :key="subcategory.id"
+                    @click="discussion.category.subcategories.push(subcategory); notSelected2 = false"
+                    :value="subcategory.name">
+              {{ subcategory.name }}
+            </option>
+          </select>
+        </div>
+        <div v-else class="card p-3">
+          <p class="mb-2"><strong>Selected Subcategory:</strong> {{ discussion.subcategory }}</p>
+          <button @click="notSelected2 = true" class="btn btn-sm btn-outline-secondary">Change SubCategory</button>
+        </div>
+      </div>
+
+      <button @click.prevent="addDiscussion" class="btn btn-success">Submit</button>
+    </form>
+  </div>
 </template>
 
 <script setup>

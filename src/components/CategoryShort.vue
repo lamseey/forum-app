@@ -1,21 +1,18 @@
 <template>
   <div class="container py-4">
-    <div class="mb-3 fw-bold fs-5">Select a category:</div>
+    <div class="mb-4 fw-bold fs-5">Select a category:</div>
 
-    <!-- Category List -->
-    <div v-if="categories.length > 0">
-      <ul class="list-group">
-        <li
-          v-for="category in categories.slice(0, 3)"
-          :key="category.id"
-          class="list-group-item d-flex justify-content-between align-items-center"
-        >
-          <router-link :to="'/category/' + category.id" class="text-decoration-none text-dark">
-            {{ category.name }}
-          </router-link>
-          <i class="bi bi-chevron-right text-muted"></i>
-        </li>
-      </ul>
+    <!-- Category Cards -->
+    <div v-if="categories.length > 0" class="row row-cols-1 row-cols-md-3 g-4">
+      <div v-for="category in categories.slice(0, 3)" :key="category.id" class="col">
+        <router-link :to="'/category/' + category.id" class="text-decoration-none">
+          <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+              <h5 class="card-title text-primary">{{ category.name }}</h5>
+            </div>
+          </div>
+        </router-link>
+      </div>
     </div>
 
     <!-- Show more categories -->
@@ -26,6 +23,7 @@
     </div>
   </div>
 </template>
+
 
 
 <script setup>

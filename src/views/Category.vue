@@ -7,9 +7,9 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const category = ref({});
-const categoryId = route.params.id;
+const categoryId = ref(route.params.id);
 async function fetchCategory() {
-  const query = await getDoc(doc(db, "categories", categoryId));
+  const query = await getDoc(doc(db, "categories", categoryId.value));
   category.value = {
     id: query.id,
     ...query.data()
@@ -25,8 +25,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <h1>{{category.name}}</h1>
-  <DiscussionList :categoryID="category.id"></DiscussionList>
+  <h1 class="mb-4 text-center">{{category.name}}</h1>
+  <DiscussionList :categoryID="categoryId"></DiscussionList>
 </template>
 
 <style scoped>

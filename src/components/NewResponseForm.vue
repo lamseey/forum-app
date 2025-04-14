@@ -4,22 +4,33 @@
     {{ addForm ? "Cancel" : "Add Response" }}
   </button>
 
-  <!-- Modal Form for Adding Response -->
-  <div v-if="addForm" class="modal-overlay">
-    <div class="modal-content">
-      <form @submit.prevent="addResponse">
-        <textarea
-          v-model="response.contenu"
-          placeholder="Your response..."
-          required
-          class="form-textarea"
-        ></textarea>
-        <br />
-        <button type="submit" class="submit-button btn btn-success">Submit</button>
-      </form>
+  <!-- Bootstrap Modal -->
+  <div v-if="addForm" class="modal d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form @submit.prevent="addResponse">
+          <div class="modal-header">
+            <h5 class="modal-title">New Response</h5>
+            <button type="button" class="btn-close" @click="addForm = false"></button>
+          </div>
+          <div class="modal-body">
+            <textarea
+              v-model="response.contenu"
+              placeholder="Your response..."
+              required
+              class="form-control"
+              rows="5"
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success w-100">Submit</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </template>
+
 
 <script setup>
 import router from '@/router';
