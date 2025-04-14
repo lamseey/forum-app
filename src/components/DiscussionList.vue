@@ -1,24 +1,57 @@
 <template>
-  <div class="discussion-list">
-    <NewDiscussionForm :categoryID="dcategoryID" @discussion-added="addDiscussion" />
-    <div v-if="discussions.length === 0" class="no-discussions">
-      <p>No discussions available.</p>
+  <div class="discussion-list container mt-4">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <NewDiscussionForm :categoryID="dcategoryID" @discussion-added="addDiscussion" />
+      </div>
     </div>
-    <span>Filter by: </span>
-    <select>
-      <option disabled value=""> Category</option>
-      <option @click="dcategoryID = undefined; fetchDiscussions()">All</option>
-      <option v-for="category in categories" :key="category.id" @click="dcategoryID = category.id; fetchDiscussions()">
-        {{ category.name }}
-      </option>
-    </select>
-    <span @click="DateIncreasing = !DateIncreasing; byDate=true;fetchDiscussions()">Date </span>
-    <span v-if="byDate">{{(DateIncreasing) ? "UP" : "DOWN"}}</span>
-    <span v-else> {{(PopuIncreasing) ? "UP" : "DOWN"}}</span>
-    <span @click="PopuIncreasing= !PopuIncreasing; byDate = false;fetchDiscussions()">Popularity </span>
 
-    <div v-for="discussion in discussions" :key="discussion.id" class="discussion-item">
-      <DiscussionItem :discussion-id="discussion.id" :discussion="discussion" @discussion-deleted="fetchDiscussions" />
+    <div v-if="discussions.length === 0" class="alert alert-info">
+      <p class="mb-0">No discussions available.</p>
+    </div>
+
+    <div class="filter-section mb-4 p-3 bg-light rounded">
+      <div class="row align-items-center">
+        <div class="col-md-12">
+          <div class="d-flex flex-wrap align-items-center gap-3">
+            <span class="fw-bold">Filter by:</span>
+
+            <select class="form-select form-select-sm" style="width: auto;">
+              <option disabled value="">Category</option>
+              <option @click="dcategoryID = undefined; fetchDiscussions()">All</option>
+              <option v-for="category in categories" :key="category.id" @click="dcategoryID = category.id; fetchDiscussions()">
+                {{ category.name }}
+              </option>
+            </select>
+
+            <button
+              @click="DateIncreasing = !DateIncreasing; byDate=true;fetchDiscussions()"
+              class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1"
+            >
+              <span>Date</span>
+              <span v-if="byDate">
+                <i :class="DateIncreasing ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
+              </span>
+            </button>
+
+            <button
+              @click="PopuIncreasing= !PopuIncreasing; byDate = false;fetchDiscussions()"
+              class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1"
+            >
+              <span>Popularity</span>
+              <span v-if="!byDate">
+                <i :class="PopuIncreasing ? 'bi bi-caret-up-fill' : 'bi bi-caret-down-fill'"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="discussions-container">
+      <div v-for="discussion in discussions" :key="discussion.id" class="mb-3">
+        <DiscussionItem :discussion-id="discussion.id" :discussion="discussion" @discussion-deleted="fetchDiscussions" />
+      </div>
     </div>
   </div>
 </template>
@@ -98,11 +131,26 @@ onMounted(() => {
 
 <style scoped>
 .discussion-list {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  background: white;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
+.filter-section {
+  background-color: #f8f9fa;
+}
+
+.discussions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Add some responsive adjustments */
+@media (max-width: 768px) {
+  .filter-section .d-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
 </style>

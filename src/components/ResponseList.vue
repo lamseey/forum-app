@@ -1,25 +1,30 @@
 <template>
-  <div class="response-list">
+  <div class="response-list container-fluid p-0">
     <!-- New Response Form -->
     <NewResponseForm :discussion-id="discussionId" @response-added="addResponse" />
-    <button v-if="responses.length > 0" @click="showResponses = !showResponses" class="btn btn-link">
-          <i class="bi bi-chat-left-text"></i> {{ showResponses ? "Hide Responses" : "Show Responses" }}
-        </button>
-    <div v-if="showResponses" class="responses">
+
+    <button v-if="responses.length > 0"
+            @click="showResponses = !showResponses"
+            class="btn btn-outline-primary mb-3">
+      <i class="bi bi-chat-left-text me-2"></i>
+      {{ showResponses ? "Hide Responses" : `Show Responses (${responses.length})` }}
+    </button>
+
+    <div v-if="showResponses" class="responses ps-3 ms-2">
       <!-- Responses List -->
-      <ul class=" mt-3">
-        <li v-for="response in responses" :key="response.id" class="list-group-item mb-3">
+      <ul class="list-group list-group-flush">
+        <li v-for="response in responses" :key="response.id" class="list-group-item p-3 mb-2 rounded">
           <!-- Response Item -->
-        <ResponseItem
+          <ResponseItem
             @response-edited="fetchResponses"
             @response-deleted="fetchResponses"
             :response="response"
+            class="mb-2"
           />
           <ResponseList :discussion-id="response.id" />
         </li>
       </ul>
     </div>
-
   </div>
 </template>
 
@@ -71,35 +76,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.response-list {
-  margin-top: 20px;
-}
-
 .responses {
-  border-left: 2px solid black;
+  border-left: 2px solid #dee2e6;
 }
 
-.list-group-item {
-  padding: 15px;
-  font-size: 1rem;
-}
-
-
-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-button:focus {
-  outline: none;
-}
+/* Keep any custom styles that Bootstrap doesn't cover */
 </style>

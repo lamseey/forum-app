@@ -1,93 +1,104 @@
 <template>
-  <div v-if="discussion" class="card shadow-sm p-3 mb-3">
-    <!-- Top Action Buttons -->
-    <div class="d-flex justify-content-end mb-2 gap-2">
-      <button 
-        v-if="user?.value && (user.value.uid == discussion.authorId || userInfo?.role == 'moderator')" 
-        class="btn btn-danger btn-sm"
-        @click="DeleteDiscussion(discussion.id)">
-        <i class="bi bi-trash-fill"></i>Delete
-      </button>
-      <button 
-        v-if="user?.value && user.value.uid == discussion.authorId" 
-        class="btn btn-warning btn-sm"
-        @click="editing = !editing">
-        <i class="bi bi-pencil-fill"></i>
-      </button>
-    </div>
-
-    <!-- View Details (Home page only) -->
-    <router-link 
-      v-if="inHome" 
-      :to="'/discussion/' + discussion.id" 
-      class="btn btn-outline-success btn-sm mb-2 w-fit-content">
-      <i class="bi bi-eye"></i> View
-    </router-link>
-    <button @click="report">Report Message</button>
-
-
-    <!-- Author Info -->
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <div class="d-flex align-items-center">
-        <img :src="discussion.authorPDP" class="rounded-circle me-2" width="36" height="36" />
-        <small class="fw-semibold">{{ discussion.authorName }}</small>
-      </div>
-      <small class="text-muted">{{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</small>
-
-    </div>
-
-    <!-- Edit Mode -->
-    <div v-if="editing">
-      <input class="form-control form-control-sm mb-2" v-model="discussion.titre" placeholder="Title" />
-      <textarea class="form-control form-control-sm mb-2" v-model="discussion.contenu" placeholder="Content"></textarea>
-      <button class="btn btn-sm btn-primary" @click="UpdateDiscussion(discussion.id)">Confirm</button>
-    </div>
-
-    <!-- View Mode -->
-    <div v-else>
-      <h3 class="fw-bold text-dark mb-1">{{ discussion.titre }}</h3>
-      <p class="text-muted small mb-2">{{ discussion.contenu }}</p>
-    </div>
-
-    <!-- Tags Section -->
-    <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
-      <div v-if="discussion.category">
+  <div v-if="discussion" class="card shadow-sm mb-4">
+    <div class="card-body">
+      <!-- Top Action Buttons -->
+      <div class="d-flex justify-content-between align-items-start mb-3">
         <router-link
-          :to="'/category/' + discussion.category.id"
-          class="badge bg-success text-decoration-none"
-          title="Category">
-          <i class="bi bi-folder-fill me-1"></i> {{ discussion.category.name }}
+          v-if="inHome"
+          :to="'/discussion/' + discussion.id"
+          class="btn btn-outline-primary btn-sm">
+          <i class="bi bi-eye me-1"></i> View Details
         </router-link>
+
+        <div class="d-flex gap-2">
+          <button
+            v-if="user && (user.uid === discussion.authorId || userInfo?.role === 'moderator')"
+            class="btn btn-outline-danger btn-sm"
+            @click="DeleteDiscussion(discussion.id)"
+            title="Delete discussion">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+          <button
+            v-if="user && user.uid === discussion.authorId"
+            class="btn btn-outline-warning btn-sm"
+            @click="editing = !editing"
+            title="Edit discussion">
+            <i class="bi bi-pencil-fill"></i>
+          </button>
+          <button
+            @click="report"
+            class="btn btn-outline-secondary btn-sm"
+            title="Report discussion">
+            <i class="bi bi-flag-fill"></i>
+          </button>
+        </div>
       </div>
-      <div v-if="discussion.subcategory">
-        <span class="badge bg-secondary" title="Subcategory">
-          <i class="bi bi-tag-fill me-1"></i> {{ discussion.subcategory }}
-        </span>
+
+      <!-- Author Info -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center">
+          <img :src="discussion.authorPDP" class="rounded-circle me-2" width="40" height="40" />
+          <div>
+            <h6 class="mb-0 fw-bold">{{ discussion.authorName }}</h6>
+            <small class="text-muted">{{ discussion.date?.toDate?.()?.toLocaleString() || new Date(discussion.date).toLocaleString() }}</small>
+          </div>
+        </div>
       </div>
+
+      <!-- Edit Mode -->
+      <div v-if="editing" class="mb-3">
+        <input class="form-control mb-2" v-model="discussion.titre" placeholder="Title" />
+        <textarea class="form-control mb-2" v-model="discussion.contenu" rows="3" placeholder="Content"></textarea>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary btn-sm" @click="UpdateDiscussion(discussion.id)">Save Changes</button>
+          <button class="btn btn-outline-secondary btn-sm" @click="editing = false">Cancel</button>
+        </div>
+      </div>
+
+      <!-- View Mode -->
+      <div v-else>
+        <h4 class="card-title fw-bold mb-2">{{ discussion.titre }}</h4>
+        <p class="card-text text-muted mb-3">{{ discussion.contenu }}</p>
+      </div>
+
+      <!-- Tags Section -->
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <div v-if="discussion.category">
+          <router-link
+            :to="'/category/' + discussion.category.id"
+            class="badge text-bg-primary text-decoration-none"
+            title="Category">
+            <i class="bi bi-folder-fill me-1"></i> {{ discussion.category.name }}
+          </router-link>
+        </div>
+        <div v-if="discussion.subcategory">
+          <span class="badge text-bg-info" title="Subcategory">
+            <i class="bi bi-tag-fill me-1"></i> {{ discussion.subcategory }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Voting -->
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <button
+          class="btn btn-sm p-0 border-0 bg-transparent"
+          :disabled="discussion.upvoters?.includes(user?.value?.uid)"
+          @click="upvote">
+          <i class="bi bi-arrow-up-circle-fill fs-5" :class="{'text-success': discussion.upvoters?.includes(user?.value?.uid), 'text-muted': !discussion.upvoters?.includes(user?.value?.uid)}"></i>
+        </button>
+        <small class="fw-bold">{{ upvoter_num }}</small>
+        <button
+          class="btn btn-sm p-0 border-0 bg-transparent"
+          :disabled="discussion.downvoters?.includes(user?.value?.uid)"
+          @click="downvote">
+          <i class="bi bi-arrow-down-circle-fill fs-5" :class="{'text-danger': discussion.downvoters?.includes(user?.value?.uid), 'text-muted': !discussion.downvoters?.includes(user?.value?.uid)}"></i>
+        </button>
+        <small class="fw-bold">{{ downvoter_num }}</small>
+      </div>
+
+      <!-- Responses -->
+      <ResponseList v-if="discussion?.id" :discussionId="discussion.id" />
     </div>
-
-
-    <!-- Voting -->
-    <div class="d-flex align-items-center gap-3">
-      <button
-        class="btn btn-sm p-0 border-0 bg-transparent"
-        :disabled="discussion.upvoters?.includes(user?.value?.uid)"
-        @click="upvote">
-        <i class="bi bi-arrow-up-circle-fill text-success"></i>
-      </button>
-      <small>{{ upvoter_num }}</small>
-      <button
-        class="btn btn-sm p-0 border-0 bg-transparent"
-        :disabled="discussion.downvoters?.includes(user?.value?.uid)"
-        @click="downvote">
-        <i class="bi bi-arrow-down-circle-fill text-danger"></i>
-      </button>
-      <small>{{ downvoter_num }}</small>
-    </div>
-
-    <!-- Responses -->
-    <ResponseList v-if="discussion?.id" :discussionId="discussion.id" />
-
   </div>
 </template>
 
@@ -223,68 +234,55 @@ async function downvote() {
 </script>
 
 <style scoped>
-.discussion-item {
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+.card {
+  border-radius: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.discussion-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  background-color: #ffffff !important;
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
 
-.discussion-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
+.card-title {
+  font-size: 1.25rem;
+  color: #212529;
 }
 
-.discussion-content {
-  font-size: 16px;
-  margin-bottom: 10px;
-  color: #555;
+.card-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-.account {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.btn-outline-danger:hover {
+  color: white;
 }
 
-.account img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.btn-outline-warning:hover {
+  color: #212529;
 }
 
-.account p {
-  margin: 0;
-  font-weight: bold;
-  color: #333;
-  font-size: 1.1em;
+.badge {
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 500;
 }
 
-.discussion-votes {
-  font-size: 16px;
-  color: #555;
+.account-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
 }
 
-.discussion-votes i {
-  font-size: 18px;
-  margin-right: 5px;
+.vote-btn:disabled {
+  opacity: 1;
 }
 
-.btn {
-  transition: transform 0.2s ease;
+.vote-btn:focus {
+  box-shadow: none;
 }
 
-.btn:hover {
-  transform: scale(1.05);
+.w-fit-content {
+  width: fit-content;
 }
 </style>

@@ -1,21 +1,21 @@
 <template>
-  <div>
+  <div class="card p-3 mb-3 shadow-sm">
     <!-- Account info -->
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
-        <img :src="response.authorPDP" alt="Profile" class="rounded-circle" width="40" height="40">
-        <p class="ms-2 mb-0 fw-bold">{{ response.authorName }}</p>
+        <img :src="response.authorPDP" alt="Profile" class="rounded-circle me-2" width="40" height="40">
+        <span class="fw-bold text-primary">{{ response.authorName }}</span>
       </div>
 
       <!-- Delete & Edit buttons -->
       <div class="d-flex align-items-center">
-        <button v-if="user && (user.uid === response.authorId || userInfo?.role === 'moderator')" 
-                class="btn btn-danger btn-sm me-2" 
+        <button v-if="user && (user.uid === response.authorId || userInfo?.role === 'moderator')"
+                class="btn btn-outline-danger btn-sm me-2"
                 @click="DeleteResponse(response.id)">
           <i class="bi bi-trash-fill"></i> Delete
         </button>
-        <button v-if="user && user.uid === response.authorId" 
-                class="btn btn-warning btn-sm" 
+        <button v-if="user && user.uid === response.authorId"
+                class="btn btn-outline-warning btn-sm"
                 @click="editing = !editing">
           <i class="bi bi-pencil-fill"></i> {{ editing ? "Cancel" : "Edit" }}
         </button>
@@ -24,40 +24,43 @@
 
     <!-- Editing form -->
     <div v-if="editing" class="mt-3">
-      <input v-model="response.contenu" class="form-control mb-2" placeholder="Edit content" />
-      <button class="btn btn-success btn-sm" @click="UpdateResponse(response.id)">Confirm</button>
+      <textarea v-model="response.contenu" class="form-control mb-2" rows="3" placeholder="Edit content"></textarea>
+      <div class="d-flex justify-content-end gap-2">
+        <button class="btn btn-outline-secondary btn-sm" @click="editing = false">Cancel</button>
+        <button class="btn btn-success btn-sm" @click="UpdateResponse(response.id)">Save Changes</button>
+      </div>
     </div>
 
     <!-- Response content -->
     <div v-else class="mt-3">
-      <p class="discussion-content">{{ response.contenu }}</p>
+      <p class="mb-0">{{ response.contenu }}</p>
     </div>
 
     <!-- Metadata & Voting -->
-    <div class="mt-2 text-muted d-flex justify-content-between align-items-center">
-      <div>
-        <span v-if="response.edited" class="badge bg-secondary">Edited</span>
-        <span class="ms-2"><strong>Date:</strong> 
-          {{ response.date?.toDate?.()?.toLocaleString() || new Date().toLocaleString() }}
-        </span>
+    <div class="mt-3 pt-2 border-top d-flex justify-content-between align-items-center">
+      <div class="text-muted small">
+        <span v-if="response.edited" class="badge bg-light text-dark me-2">Edited</span>
+        <i class="bi bi-clock me-1"></i>
+        {{ response.date?.toDate?.()?.toLocaleString() || new Date().toLocaleString() }}
       </div>
 
       <!-- Vote buttons -->
-      <div class="d-flex align-items-center gap-3">
-        <button 
-          class="btn btn-sm p-0 border-0 bg-transparent" 
-          :disabled="response.upvoters?.includes(user?.uid)" 
+      <div class="d-flex align-items-center gap-2">
+        <button
+          class="btn btn-sm p-0 border-0 bg-transparent"
+          :disabled="response.upvoters?.includes(user?.uid)"
           @click="upvote">
-          <i class="bi bi-arrow-up-circle-fill text-success" width="40px"></i>
+          <i class="bi bi-arrow-up-circle-fill fs-5" :class="{'text-success': !response.upvoters?.includes(user?.uid), 'text-muted': response.upvoters?.includes(user?.uid)}"></i>
         </button>
-        <small>{{ upvoter_num }}</small>
-        <button 
-          class="btn btn-sm p-0 border-0 bg-transparent" 
-          :disabled="response.downvoters?.includes(user?.uid)" 
+        <small class="fw-bold" :class="{'text-success': upvoter_num > 0}">{{ upvoter_num }}</small>
+
+        <button
+          class="btn btn-sm p-0 border-0 bg-transparent"
+          :disabled="response.downvoters?.includes(user?.uid)"
           @click="downvote">
-          <i class="bi bi-arrow-down-circle-fill text-danger"></i>
+          <i class="bi bi-arrow-down-circle-fill fs-5" :class="{'text-danger': !response.downvoters?.includes(user?.uid), 'text-muted': response.downvoters?.includes(user?.uid)}"></i>
         </button>
-        <small>{{ downvoter_num }}</small>
+        <small class="fw-bold" :class="{'text-danger': downvoter_num > 0}">{{ downvoter_num }}</small>
       </div>
     </div>
   </div>
@@ -174,15 +177,15 @@ async function downvote() {
 </script>
 
 <style scoped>
-.response-item {
-  border: none !important;
+/* Custom styles that Bootstrap doesn't cover */
+.card {
   border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
+  font-size : 0.9rem;
+  border: none;
 }
 
-.discussion-content {
-  font-size: 1.1em;
-  color: #333;
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
 }
 </style>

@@ -1,25 +1,32 @@
 <template>
-  <div class="container mt-4">
-    <div>Select a categorie : </div>
+  <div class="container py-4">
+    <div class="mb-3 fw-bold fs-5">Select a category:</div>
+
     <!-- Category List -->
     <div v-if="categories.length > 0">
       <ul class="list-group">
-        <li v-for="category in categories.slice(0, 3)" :key="category.id" class="list-group-item">
-          <router-link :to="'/category/' + category.id" class="text-decoration-none">
+        <li
+          v-for="category in categories.slice(0, 3)"
+          :key="category.id"
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          <router-link :to="'/category/' + category.id" class="text-decoration-none text-dark">
             {{ category.name }}
           </router-link>
+          <i class="bi bi-chevron-right text-muted"></i>
         </li>
       </ul>
     </div>
 
     <!-- Show more categories -->
-    <router-link to="/categorylist" class="d-block mt-4">
-      <h1 v-if="categories.length > 3" class="btn btn-link">
+    <div v-if="categories.length > 3" class="mt-4 text-center">
+      <router-link to="/categorylist" class="btn btn-outline-primary">
         Show more categories
-      </h1>
-    </router-link>
+      </router-link>
+    </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue';
